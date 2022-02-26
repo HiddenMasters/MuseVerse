@@ -14,7 +14,7 @@ public class Auth : MonoBehaviour
     public static IEnumerator UserRegister(string username, string password, string nickname, bool gender,
         string email = null)
     {
-        const string path = "/register";
+        const string path = "/auth/register";
 
         RegisterSerializer register = new RegisterSerializer(username, password, nickname, gender, email);
         string json = JsonUtility.ToJson(register);
@@ -33,12 +33,13 @@ public class Auth : MonoBehaviour
         else
         {
             // 축하 메시지 혹은 정상 회원 가입 리턴
+            LoginPanel.OpenLoginGroup();
         }
     }
     
     public static IEnumerator UserLogin(string username, string password)
     {
-        const string path = "/login";
+        const string path = "/auth/login";
 
         LoginSerializer login = new LoginSerializer(username, password);
 
@@ -66,7 +67,7 @@ public class Auth : MonoBehaviour
             AtomManager.Token = _token;
             
             // LoginPanel 해제
-            LoginPanel.ClosePanel();
+            LoginPanel.CloseLoginGroup();
         }
     }
 }

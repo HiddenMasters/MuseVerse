@@ -37,4 +37,13 @@ public sealed class AtomManager : MonoBehaviour
         password = password.Replace("\u200b", "");
         Instance.StartCoroutine(Auth.UserLogin(username, password));
     }
+
+    public static void StartUserRegister(string email, string username, string password, string nickname, bool gender)
+    {
+        email = email.Replace("\u200b", "");
+        username = username.Replace("\u200b", "");
+        password = password.Replace("\u200b", "");
+        nickname = nickname.Replace("\u200b", "");
+        Instance.StartCoroutine(Auth.UserRegister(username, password, nickname, gender, email));
+    }
 }
