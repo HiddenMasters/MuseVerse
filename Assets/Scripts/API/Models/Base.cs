@@ -55,6 +55,25 @@ namespace API.Models
             this.immediatePrice = immediatePrice;
         }
     }
+    
+    [Serializable]
+    public class ExhibitionTradeSerializer
+    {
+        public int id;
+        public string owner;
+        public int item;
+        public float orderPrice;
+        public float immediatePrice;
+
+        public ExhibitionTradeSerializer(int id, string owner, int item, float orderPrice, float immediatePrice)
+        {
+            this.id = id;
+            this.owner = owner;
+            this.item = item;
+            this.orderPrice = orderPrice;
+            this.immediatePrice = immediatePrice;
+        }
+    }
 
     [Serializable]
     public class TradeItemSerializer
@@ -105,7 +124,65 @@ namespace API.Models
             this.upload = upload;
         }
     }
+    
+    [Serializable]
+    public class ExhibitionItemSerializer
+    {
+        public string name;
+        public float price;
+        public int id;
+        public string author;
 
+        public ExhibitionItemSerializer(string name, float price, int id, string author)
+        {
+            this.name = name;
+            this.price = price;
+            this.id = id;
+            this.author = author;
+        }
+    }
+
+    [Serializable]
+    public class InventorySerializer
+    {
+        public int id;
+        public string upload;
+
+        public InventorySerializer(int id, string upload)
+        {
+            this.id = id;
+            this.upload = upload;
+        }
+    }
+
+    [Serializable]
+    public class InventoriesSerializer
+    {
+        public InventorySerializer[] inventories;
+    }
+
+    [Serializable]
+    public class SampleItemSerializer
+    {
+        public int id;
+        public string name;
+        public float price;
+        public string upload;
+    }
+    
+    [Serializable]
+    public class ExhibitionInventorySerializer
+    {
+        public SampleItemSerializer item;
+        public DateTime expire;
+    }
+
+    [Serializable]
+    public class ExhibitionInventoriesSerializer
+    {
+        public ExhibitionInventorySerializer[] exhibitionInventories;
+    }
+    
     [Serializable]
     public class ItemsURLSerializer
     {
@@ -116,14 +193,12 @@ namespace API.Models
     public class OrderCreateSerializer
     {
         public int item;
-        public float price;
         public int trade;
-        public string status = "order";
+        public string status = "buy";
 
-        public OrderCreateSerializer(int item, float price, int trade, string status)
+        public OrderCreateSerializer(int item, int trade, string status)
         {
             this.item = item;
-            this.price = price;
             this.trade = trade;
             this.status = status;
         }
@@ -150,15 +225,15 @@ namespace API.Models
     [Serializable]
     public class ExhibitionSerializer
     {
-        public ItemSerializer item;
-        public TradeSerializer trade;
+        public ExhibitionItemSerializer item;
+        public ExhibitionTradeSerializer trade;
         public int hall;
         public int num;
         public DateTime expire;
         public int max_widht;
         public int max_height;
 
-        public ExhibitionSerializer(ItemSerializer item, TradeSerializer trade, int hall, int num, DateTime expire, int maxWidht, int maxHeight)
+        public ExhibitionSerializer(ExhibitionItemSerializer item, ExhibitionTradeSerializer trade, int hall, int num, DateTime expire, int maxWidht, int maxHeight)
         {
             this.item = item;
             this.trade = trade;

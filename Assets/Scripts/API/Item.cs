@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEditor.Networking;
 using API.Models;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
@@ -34,26 +36,47 @@ public class Item : MonoBehaviour
             ItemSerializer serializer = JsonUtility.FromJson<ItemSerializer>(request.downloadHandler.text);
         }
     }
-
-    public static IEnumerator GetItemURL(int itemId)
+    
+    public static IEnumerator GetItemById(int id)
     {
-        string path = string.Format("/item/{0}/image", itemId);
+        string path = String.Format("/item/{0}", id);
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
-        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("Authorization", AtomManager.Token);
 
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(request.error);
-            
-            // 아이템이 존재하지 않은 경우 -> 
         }
         else
         {
-            
+            ExhibitionItemSerializer serializer = JsonUtility.FromJson<ExhibitionItemSerializer>(request.downloadHandler.text);
+            GameObject.Find("Item Info Name Text").GetComponent<Text>().text = serializer.name;
+            GameObject.Find("Item Info Author Text").GetComponent<Text>().text = serializer.author;
+        }
+    }
+
+    public static IEnumerator GetImageByItem(int id, SpriteRenderer renderer, Image image)
+    {
+        string path = String.Format("/item/{0}/image", id);
+
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(BaseURL + path);
+        // request.SetRequestHeader("Authorization", AtomManager.Token);
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            Texture2D texture = ((DownloadHandlerTexture) request.downloadHandler).texture;
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, 640, 480), new Vector2(0.5f, 0.5f));
+            renderer.sprite = sprite;
+            image.sprite = sprite;
         }
     }
 
