@@ -7,20 +7,10 @@ using UnityEngine.UI;
 
 public class InventoryGroup : MonoBehaviour
 {
-    private static GameObject _inventoryGroup;
-    private static GameObject _itemInfoGroup;
-    private static GameObject _extendGroup;
 
     public static void OpenInventory()
     {
         AtomManager.ClosePanel();
-        AtomManager.OpenPanel("Inventory Group");
-    }
-    
-    public static void OpenInventoryGroup()
-    {
-        AtomManager.ClosePanel();
-        LoadInventories();
         AtomManager.OpenPanel("Inventory Group");
     }
 
@@ -75,7 +65,6 @@ public class InventoryGroup : MonoBehaviour
         {
             return;
         }
-        
         AtomManager.ClosePanel();
         DetailSetting(AtomManager.Inventories[number].id);
         AtomManager.OpenPanel("Item Info Group");
@@ -83,7 +72,7 @@ public class InventoryGroup : MonoBehaviour
 
     private static void DetailSetting(int number)
     {
-        Transform transform = _itemInfoGroup.transform.GetChild(0).GetChild(0);
+        Transform transform = GameObject.Find("Item Info Group").transform.GetChild(0).GetChild(0);
         SpriteRenderer renderer = transform.GetComponent<SpriteRenderer>();
         Image image = transform.GetComponent<Image>();
         AtomManager.StartGetImageByItem(number, renderer, image);
@@ -99,12 +88,13 @@ public class InventoryGroup : MonoBehaviour
 
         AtomManager.ExhibitionInventoryNumber = number;
         
+        GameObject extendGroup = GameObject.Find("Extend Group");
         AtomManager.ClosePanel();
-        _extendGroup.transform.GetChild(0).GetChild(3).GetComponent<Text>().text =
+        extendGroup.transform.GetChild(0).GetChild(3).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].item.name;
-        _extendGroup.transform.GetChild(0).GetChild(4).GetComponent<Text>().text =
+        extendGroup.transform.GetChild(0).GetChild(4).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].item.price.ToString("N1");
-        _extendGroup.transform.GetChild(0).GetChild(5).GetComponent<Text>().text =
+        extendGroup.transform.GetChild(0).GetChild(5).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].expire.ToString("MM/dd/yyyy");
         AtomManager.OpenPanel("Extend Group");
     }

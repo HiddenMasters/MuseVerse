@@ -19,11 +19,19 @@ public sealed class AtomManager : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);    
-        }   
-
+        }
+        
+        DefaultSetting();
         DontDestroyOnLoad(gameObject);
     }
-    
+
+    private void DefaultSetting()
+    {
+        InventoryGroup.LoadInventories();
+        StartGetMyInfoProfile();
+        StartGetMyInfoBuyHistory();
+        StartGetMyInfoSellHistory();
+    }
     
 
     // public static string Token { get; set; }
@@ -52,15 +60,23 @@ public sealed class AtomManager : MonoBehaviour
     
     public static string LastPanel { get; set; }
     
+    public static ProfileSerializer Profile { get; set; }
+    public static SimpleItemSerializer[] BuyHistories { get; set; }
+    public static SimpleItemSerializer[] SellHistories { get; set; }
+    
+    
     public static int ExhibitionInventoryNumber { get; set; }
     
     // public static ExhibitionSerializer Exhibition { get; set; }
     public static void ClosePanel()
     {
-        _gameObject = GameObject.Find(LastPanel);
-        RectTransform transform = _gameObject.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector2.down * 1200;
-        IsPanelActive = false;
+        if (LastPanel != null)
+        {
+            _gameObject = GameObject.Find(LastPanel);
+            RectTransform transform = _gameObject.GetComponent<RectTransform>();
+            transform.anchoredPosition = Vector2.down * 1200;
+            IsPanelActive = false;    
+        }
     }
 
     public static void OpenPanel(string panel)
@@ -116,5 +132,20 @@ public sealed class AtomManager : MonoBehaviour
     public static void StartExtendExhibition(int item)
     {
         Instance.StartCoroutine(Trade.ExtendTrade(item, 14));
+    }
+
+    public static void StartGetMyInfoProfile()
+    {
+        Instance.StartCoroutine(Account.GetMyInfoProfile());
+    }
+
+    public static void StartGetMyInfoBuyHistory()
+    {
+        Instance.StartCoroutine(Account.GetMyInfoBuyHistory());
+    }
+
+    public static void StartGetMyInfoSellHistory()
+    {
+        Instance.StartCoroutine(Account.GetMyInfoSellHistory());
     }
 }
