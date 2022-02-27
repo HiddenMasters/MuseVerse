@@ -38,32 +38,20 @@ public class LoginPanel : MonoBehaviour
 
     public static void OpenLoginGroup()
     {
-        CloseRegisterGroup();
+        AtomManager.CloseLastPanel();
         LoginGroup = GameObject.Find("Login Group");
         RectTransform transform = LoginGroup.GetComponent<RectTransform>();
         transform.anchoredPosition = Vector3.zero;
+        AtomManager.LastPanel = "Login Group";
     }
     
     public static void OpenRegisterGroup()
     {
-        CloseRegisterGroup();
+        AtomManager.CloseLastPanel();
         RegisterGroup = GameObject.Find("Register Group");
         RectTransform transform = RegisterGroup.GetComponent<RectTransform>();
         transform.anchoredPosition = Vector3.zero;
-    }
-    
-    public static void CloseLoginGroup()
-    {
-        LoginGroup = GameObject.Find("Login Group");
-        RectTransform transform = LoginGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector2.down * 1200;
-    }
-    
-    public static void CloseRegisterGroup()
-    {
-        RegisterGroup = GameObject.Find("Register Group");
-        RectTransform transform = RegisterGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector2.down * 1200;
+        AtomManager.LastPanel = "Register Group";
     }
 
     public void checkMale()

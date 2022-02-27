@@ -8,19 +8,18 @@ using API.Models;
 public class Order : MonoBehaviour
 {
     private const string BaseURL = "http://0.0.0.0:8080/api";
-    private static string _token;
 
-    public static IEnumerator CreateOrder(int item, float price, int trade, string status = "order")
+    public static IEnumerator CreateOrder(int item,int trade, string status = "order")
     {
         const string path = "/order";
 
-        OrderCreateSerializer serializer = new OrderCreateSerializer(item, price, trade, status);
+        OrderCreateSerializer serializer = new OrderCreateSerializer(item, trade, status);
         string json = JsonUtility.ToJson(serializer);
         byte[] bytes = Encoding.UTF8.GetBytes(json);
         
         UnityWebRequest request = UnityWebRequest.Post(BaseURL + path, json);
         request.uploadHandler = new UploadHandlerRaw(bytes);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -35,7 +34,7 @@ public class Order : MonoBehaviour
         }
         else
         {
-            OrderSerializer order = JsonUtility.FromJson<OrderSerializer>(request.downloadHandler.text);
+            // 구매 성공 알림 띄워주기
         }
     }
 
@@ -44,7 +43,7 @@ public class Order : MonoBehaviour
         string path = String.Format("/order/{0}", orderId);
         
         UnityWebRequest request = UnityWebRequest.Delete(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -68,7 +67,7 @@ public class Order : MonoBehaviour
         const string path = "/orders";
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -88,7 +87,7 @@ public class Order : MonoBehaviour
         string path = string.Format("/orders/{0}", tradeId);
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
