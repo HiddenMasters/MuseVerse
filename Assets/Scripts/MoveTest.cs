@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 
 public class MoveTest : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class MoveTest : MonoBehaviour
         [HideInInspector] public GameObject fpCamObj;
         
         [HideInInspector] public Transform transform;
+        [HideInInspector] public CapsuleCollider collider;
         [HideInInspector] public Rigidbody rigid;
         [HideInInspector] public Animator anim;
     }
@@ -608,7 +610,41 @@ public class MoveTest : MonoBehaviour
     }
     
     #endregion
-    
+
+    /*************************************************************************
+    *                           On Trigger Methods
+    *************************************************************************/
+
+    #region .
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Portal"))
+        {
+            if (other.gameObject.name == "MainPortal")
+            {
+                AsyncOperation _async;
+                _async = SceneManager.LoadSceneAsync("MainScene");
+            }
+            else if (other.gameObject.name == "PrivatePortal")
+            {
+                AsyncOperation _async;
+                _async = SceneManager.LoadSceneAsync("PrivateScene");
+            }
+            else if (other.gameObject.name == "AtelierPortal")
+            {
+                Vector3 destination = GameObject.Find("LobbyPortal").transform.position;
+                Com.transform.position = new Vector3(destination.x, destination.y, destination.z - 3);
+            }
+            else if (other.gameObject.name == "LobbyPortal")
+            {
+                Vector3 destination = GameObject.Find("AtelierPortal").transform.position;
+                Com.transform.position = new Vector3(destination.x, destination.y, destination.z - 3);
+            }
+        }
+    }
+
+    #endregion
     
     
 }
