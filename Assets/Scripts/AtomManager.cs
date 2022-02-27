@@ -48,15 +48,30 @@ public sealed class AtomManager : MonoBehaviour
     public static InventorySerializer[] Inventories { get; set; }
     public static ExhibitionInventorySerializer[] ExhibitionInventories { get; set; }
     
+    public static bool IsPanelActive { get; set; }
+    
     public static string LastPanel { get; set; }
     
+    public static int ExhibitionInventoryNumber { get; set; }
+    
     // public static ExhibitionSerializer Exhibition { get; set; }
-    public static void CloseLastPanel()
+    public static void ClosePanel()
     {
         _gameObject = GameObject.Find(LastPanel);
         RectTransform transform = _gameObject.GetComponent<RectTransform>();
         transform.anchoredPosition = Vector2.down * 1200;
+        IsPanelActive = false;
     }
+
+    public static void OpenPanel(string panel)
+    {
+        IsPanelActive = true;
+        GameObject gameObject = GameObject.Find(panel);
+        RectTransform transform = gameObject.GetComponent<RectTransform>();
+        transform.anchoredPosition = Vector3.zero;
+        LastPanel = panel;
+    }
+    
     public static void StartUserLogin(string username, string password)
     {
         username = username.Replace("\u200b", "");
@@ -96,5 +111,10 @@ public sealed class AtomManager : MonoBehaviour
     public static void StartGetItemById(int id)
     {
         Instance.StartCoroutine(Item.GetItemById(id));
+    }
+
+    public static void StartExtendExhibition(int item)
+    {
+        Instance.StartCoroutine(Trade.ExtendTrade(item, 14));
     }
 }

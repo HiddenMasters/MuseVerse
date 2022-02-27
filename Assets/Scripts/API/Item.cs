@@ -15,8 +15,6 @@ public class Item : MonoBehaviour
     {
         const string path = "/item";
         WWWForm form = new WWWForm();
-        // TODO: Add File
-        // form.AddField("file", );
         form.AddField("name", name);
         form.AddField("format", format);
         form.AddField("price", price.ToString());

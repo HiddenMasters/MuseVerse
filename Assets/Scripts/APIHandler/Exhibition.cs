@@ -42,6 +42,7 @@ public class Exhibition : MonoBehaviour
     
     private void OnMouseDown()
     {
+        Debug.Log("Run Click");
         ShowTradeGroup();
         if (_exhibition == null)
         { 
@@ -68,9 +69,7 @@ public class Exhibition : MonoBehaviour
 
     private void ShowTradeGroup()
     {
-        RectTransform transform = _tradeGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector3.zero;
-        AtomManager.LastPanel = "Trade Group";
+        AtomManager.OpenPanel("Trade Group");
     }
     
     private void GetTexts()
