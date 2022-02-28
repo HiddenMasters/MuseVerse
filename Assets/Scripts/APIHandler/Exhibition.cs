@@ -38,7 +38,6 @@ public class Exhibition : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _image = GetComponent<Image>();
         _tradeGroup = GameObject.Find("Trade Group");
-        GetTexts();
     }
     
     private void OnMouseDown()
@@ -55,17 +54,19 @@ public class Exhibition : MonoBehaviour
             {
                 GameObject.Find("Trade Group").transform.Find("Exhibition").gameObject.SetActive(false);
                 GameObject.Find("Trade Group").transform.Find("Trade").gameObject.SetActive(true);
-                painting.GetComponent<SpriteRenderer>().sprite = _sprite;
-                painting.GetComponent<Image>().sprite = _sprite;
+                
+                // TODO: Painting Image -> Trade Panting Image: 이름 변경
+                GameObject.Find("Trade Painting Image").GetComponent<SpriteRenderer>().sprite = _sprite;
+                GameObject.Find("Trade Painting Image").GetComponent<Image>().sprite = _sprite;
 
                 AtomManager.ExhibitionItem = _exhibition.item.id;
                 AtomManager.ExhibitionTrade = _exhibition.trade.id;
             
-                _name.text = _exhibition.item.name;
-                _author.text = _exhibition.item.author;
-                _owner.text = _exhibition.trade.owner;
-                _price.text = _exhibition.item.price.ToString("N1");
-                _expire.text = _exhibition.expire.ToString("yy-MM-dd");
+                GameObject.Find("Trade Group").transform.Find("Trade").Find("Painting Description").GetChild(0).GetChild(1).GetComponent<Text>().text = _exhibition.item.name;
+                GameObject.Find("Trade Group").transform.Find("Trade").Find("Painting Description").GetChild(1).GetChild(1).GetComponent<Text>().text = _exhibition.item.author;
+                GameObject.Find("Trade Group").transform.Find("Trade").Find("Painting Description").GetChild(2).GetChild(1).GetComponent<Text>().text = _exhibition.trade.owner;
+                GameObject.Find("Trade Group").transform.Find("Trade").Find("Description").GetChild(0).GetChild(1).GetComponent<Text>().text = _exhibition.item.price.ToString("N1");
+                GameObject.Find("Trade Group").transform.Find("Trade").Find("Description").GetChild(1).GetChild(1).GetComponent<Text>().text = _exhibition.expire.ToString("yy-MM-dd");
             }   
         }
     }
@@ -73,15 +74,6 @@ public class Exhibition : MonoBehaviour
     private void ShowTradeGroup()
     {
         AtomManager.OpenPanel("Trade Group");
-    }
-    
-    private void GetTexts()
-    {
-        _name = nameText.GetComponent<Text>();
-        _author = authorText.GetComponent<Text>();
-        _owner = ownerText.GetComponent<Text>();
-        _price = priceText.GetComponent<Text>();
-        _expire = expireText.GetComponent<Text>();
     }
     
     private IEnumerator GetExhibition()

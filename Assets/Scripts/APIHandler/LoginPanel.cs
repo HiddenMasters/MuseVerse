@@ -21,6 +21,7 @@ public class LoginPanel : MonoBehaviour
     
     public void Login()
     {
+        AtomManager.OpenPanel("Login Group");
         string username = usernameLoginInput.GetComponent<TextMeshProUGUI>().text;
         string password = passwordLoginInput.GetComponent<TextMeshProUGUI>().text;
         AtomManager.StartUserLogin(username, password);
@@ -28,6 +29,7 @@ public class LoginPanel : MonoBehaviour
 
     public void Register()
     {
+        AtomManager.OpenPanel("Register Group");
         string email = emailRegisterInput.GetComponent<TextMeshProUGUI>().text;
         string username = usernameRegisterInput.GetComponent<TextMeshProUGUI>().text;
         string password = passwordRegisterInput.GetComponent<TextMeshProUGUI>().text;
