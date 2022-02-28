@@ -48,6 +48,9 @@ public class MoveTest : MonoBehaviour
         public KeyCode jump = KeyCode.Space;
         public KeyCode switchCamera = KeyCode.Tab;
         public KeyCode showCursor = KeyCode.LeftAlt;
+        public KeyCode showInventory = KeyCode.I;
+        public KeyCode showMyInfo = KeyCode.P;
+        public KeyCode closePanel = KeyCode.Escape;
     }
 
     [Serializable]
@@ -197,22 +200,43 @@ public class MoveTest : MonoBehaviour
     private void Update()
     {
         _deltaTime = Time.deltaTime;
+        
+        // Panel이 켜지면 돌면 안되는 것
+        if (!AtomManager.IsPanelActive)
+        {
+            CameraViewToggle();
+            SetValuesByKeyInput();
+            CheckDistanceFromGround();
 
-        // 1. Check, Key Input
+            Move();
+            Jump();
+            UpdateAnimationParams();
+            UpdateCurrentValues();
+            
+            AdditionalKey();
+        }
+        // 항상 돌아야할 것
         ShowCursorToggle();
-        CameraViewToggle();
-        SetValuesByKeyInput();
-        CheckDistanceFromGround();
-
-        // 2. Behaviors, Camera Actions
         Rotate();
         TpCameraZoom();
+        ClosePanel();
+
+        // 1. Check, Key Input
+        // ShowCursorToggle();
+        // CameraViewToggle();
+        // SetValuesByKeyInput();
+        // CheckDistanceFromGround();
+
+        // 2. Behaviors, Camera Actions
+        // Rotate();
+        // TpCameraZoom();
 
         // 3. Updates
-        Move();
-        Jump();
-        UpdateAnimationParams();
-        UpdateCurrentValues();
+        // Move();
+        // Jump();
+        // UpdateAnimationParams();
+        // UpdateCurrentValues();
+
     }
 
     #endregion
@@ -562,6 +586,29 @@ public class MoveTest : MonoBehaviour
             _currentJumpCooldown -= _deltaTime;
     }
 
+    private void AdditionalKey()
+    {
+        if (Input.GetKeyDown(Key.showInventory))
+        {
+            AtomManager.ClosePanel();
+            AtomManager.OpenPanel("Inventory Group");
+        }
+
+        if (Input.GetKeyDown(Key.showMyInfo))
+        {
+            AtomManager.ClosePanel();
+            AtomManager.OpenPanel("My Info Group");
+        }
+    }
+
+    private void ClosePanel()
+    {
+        if (Input.GetKeyDown(Key.closePanel))
+        {
+            AtomManager.ClosePanel();
+        }
+    }
+    
     #endregion
 
     /*************************************************************************

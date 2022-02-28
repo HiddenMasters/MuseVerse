@@ -7,27 +7,16 @@ using UnityEngine.UI;
 
 public class InventoryGroup : MonoBehaviour
 {
-    private static GameObject _inventoryGroup;
-    private static GameObject _itemInfoGroup;
-    private static GameObject _extendGroup;
 
     public static void OpenInventory()
     {
-        AtomManager.CloseLastPanel();
-        _inventoryGroup = GameObject.Find("Inventory Group");
-        RectTransform transform = _inventoryGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector3.zero;
-        AtomManager.LastPanel = "Inventory Group";
+        AtomManager.ClosePanel();
+        AtomManager.OpenPanel("Inventory Group");
     }
-    
-    public static void OpenInventoryGroup()
+
+    public static void CloseInventory()
     {
-        AtomManager.CloseLastPanel();
-        LoadInventories();
-        _inventoryGroup = GameObject.Find("Inventory Group");
-        RectTransform transform = _inventoryGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector3.zero;
-        AtomManager.LastPanel = "Inventory Group";
+        AtomManager.ClosePanel();
     }
 
     public static void LoadInventories()
@@ -76,18 +65,14 @@ public class InventoryGroup : MonoBehaviour
         {
             return;
         }
-        
-        AtomManager.CloseLastPanel();
-        _itemInfoGroup = GameObject.Find("Item Info Group");
+        AtomManager.ClosePanel();
         DetailSetting(AtomManager.Inventories[number].id);
-        RectTransform transform = _itemInfoGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector3.zero;
-        AtomManager.LastPanel = "Item Info Group";
+        AtomManager.OpenPanel("Item Info Group");
     }
 
     private static void DetailSetting(int number)
     {
-        Transform transform = _itemInfoGroup.transform.GetChild(0).GetChild(0);
+        Transform transform = GameObject.Find("Item Info Group").transform.GetChild(0).GetChild(0);
         SpriteRenderer renderer = transform.GetComponent<SpriteRenderer>();
         Image image = transform.GetComponent<Image>();
         AtomManager.StartGetImageByItem(number, renderer, image);
@@ -100,17 +85,23 @@ public class InventoryGroup : MonoBehaviour
         {
             return;
         }
+
+        AtomManager.ExhibitionInventoryNumber = number;
         
-        AtomManager.CloseLastPanel();
-        _extendGroup = GameObject.Find("Extend Group");
-        _extendGroup.transform.GetChild(0).GetChild(3).GetComponent<Text>().text =
+        GameObject extendGroup = GameObject.Find("Extend Group");
+        AtomManager.ClosePanel();
+        extendGroup.transform.GetChild(0).GetChild(3).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].item.name;
-        _extendGroup.transform.GetChild(0).GetChild(4).GetComponent<Text>().text =
+        extendGroup.transform.GetChild(0).GetChild(4).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].item.price.ToString("N1");
-        _extendGroup.transform.GetChild(0).GetChild(5).GetComponent<Text>().text =
+        extendGroup.transform.GetChild(0).GetChild(5).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].expire.ToString("MM/dd/yyyy");
-        RectTransform transform = _extendGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector3.zero;
-        AtomManager.LastPanel = "Extend Group";
+        AtomManager.OpenPanel("Extend Group");
+    }
+
+    public static void ExtendExpire()
+    {
+        int item = AtomManager.ExhibitionInventories[AtomManager.ExhibitionInventoryNumber].item.id;
+        AtomManager.StartExtendExhibition(item);
     }
 }

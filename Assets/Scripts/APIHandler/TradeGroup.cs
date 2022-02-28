@@ -7,11 +7,8 @@ public class TradeGroup : MonoBehaviour
     private static GameObject _tradeGroup;
     public static void OpenTradeGroup()
     {
-        AtomManager.CloseLastPanel();
-        _tradeGroup = GameObject.Find("Trade Group");
-        RectTransform transform = _tradeGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector3.zero;
-        AtomManager.LastPanel = "Trade Group";
+        AtomManager.ClosePanel();
+        AtomManager.OpenPanel("Trade Group");
     }
 
     public static void BuyItem()

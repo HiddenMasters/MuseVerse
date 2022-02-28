@@ -7,8 +7,8 @@ using UnityEngine.Networking;
 
 public class Auth : MonoBehaviour
 {
-    // private const string BaseURL = "http://museverse.kro.kr/api";
-    private const string BaseURL = "http://0.0.0.0:8080/api";
+    private const string BaseURL = "http://museverse.kro.kr/api";
+    // private const string BaseURL = "http://0.0.0.0:8080/api";
     private static string _token;
 
     public static IEnumerator UserRegister(string username, string password, string nickname, bool gender,
@@ -67,7 +67,7 @@ public class Auth : MonoBehaviour
             AtomManager.Token = _token;
             
             // LoginPanel 해제
-            AtomManager.CloseLastPanel();
+            AtomManager.ClosePanel();
         }
     }
 }

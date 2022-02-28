@@ -28,7 +28,8 @@ public class Exhibition : MonoBehaviour
     private Text _name, _author, _owner, _price, _expire;
     private bool _flag;
     
-    private const string BaseURL = "http://0.0.0.0:8080/api";
+    private const string BaseURL = "http://museverse.kro.kr/api";
+    // private const string BaseURL = "http://0.0.0.0:8080/api";
 
     void Awake()
     {
@@ -42,35 +43,36 @@ public class Exhibition : MonoBehaviour
     
     private void OnMouseDown()
     {
-        ShowTradeGroup();
-        if (_exhibition == null)
-        { 
-            GameObject.Find("Trade Group").transform.Find("Trade").gameObject.SetActive(false);
-            GameObject.Find("Trade Group").transform.Find("Exhibition").gameObject.SetActive(true);
-        }
-        else
+        if (!AtomManager.IsPanelActive)
         {
-            GameObject.Find("Trade Group").transform.Find("Exhibition").gameObject.SetActive(false);
-            GameObject.Find("Trade Group").transform.Find("Trade").gameObject.SetActive(true);
-            painting.GetComponent<SpriteRenderer>().sprite = _sprite;
-            painting.GetComponent<Image>().sprite = _sprite;
+            ShowTradeGroup();
+            if (_exhibition == null)
+            { 
+                GameObject.Find("Trade Group").transform.Find("Trade").gameObject.SetActive(false);
+                GameObject.Find("Trade Group").transform.Find("Exhibition").gameObject.SetActive(true);
+            }
+            else
+            {
+                GameObject.Find("Trade Group").transform.Find("Exhibition").gameObject.SetActive(false);
+                GameObject.Find("Trade Group").transform.Find("Trade").gameObject.SetActive(true);
+                painting.GetComponent<SpriteRenderer>().sprite = _sprite;
+                painting.GetComponent<Image>().sprite = _sprite;
 
-            AtomManager.ExhibitionItem = _exhibition.item.id;
-            AtomManager.ExhibitionTrade = _exhibition.trade.id;
+                AtomManager.ExhibitionItem = _exhibition.item.id;
+                AtomManager.ExhibitionTrade = _exhibition.trade.id;
             
-            _name.text = _exhibition.item.name;
-            _author.text = _exhibition.item.author;
-            _owner.text = _exhibition.trade.owner;
-            _price.text = _exhibition.item.price.ToString("N1");
-            _expire.text = _exhibition.expire.ToString("yy-MM-dd");
+                _name.text = _exhibition.item.name;
+                _author.text = _exhibition.item.author;
+                _owner.text = _exhibition.trade.owner;
+                _price.text = _exhibition.item.price.ToString("N1");
+                _expire.text = _exhibition.expire.ToString("yy-MM-dd");
+            }   
         }
     }
 
     private void ShowTradeGroup()
     {
-        RectTransform transform = _tradeGroup.GetComponent<RectTransform>();
-        transform.anchoredPosition = Vector3.zero;
-        AtomManager.LastPanel = "Trade Group";
+        AtomManager.OpenPanel("Trade Group");
     }
     
     private void GetTexts()

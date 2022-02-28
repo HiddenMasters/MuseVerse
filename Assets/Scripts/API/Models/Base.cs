@@ -162,18 +162,25 @@ namespace API.Models
     }
 
     [Serializable]
-    public class SampleItemSerializer
+    public class SimpleItemSerializer
     {
         public int id;
         public string name;
         public float price;
         public string upload;
+        public DateTime created_at;
+    }
+
+    [Serializable]
+    public class TradeHistorySerializer
+    {
+        public SimpleItemSerializer[] histories;
     }
     
     [Serializable]
     public class ExhibitionInventorySerializer
     {
-        public SampleItemSerializer item;
+        public SimpleItemSerializer item;
         public DateTime expire;
     }
 
@@ -242,6 +249,23 @@ namespace API.Models
             this.expire = expire;
             max_widht = maxWidht;
             max_height = maxHeight;
+        }
+    }
+
+    [Serializable]
+    public class ProfileSerializer
+    {
+        public int id;
+        public int user;
+        public string nickname;
+        public float money;
+
+        public ProfileSerializer(int id, int user, string nickname, float money)
+        {
+            this.id = id;
+            this.user = user;
+            this.nickname = nickname;
+            this.money = money;
         }
     }
 }
