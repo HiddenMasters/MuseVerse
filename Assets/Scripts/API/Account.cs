@@ -6,8 +6,9 @@ using UnityEngine.Networking;
 
 public class Account : MonoBehaviour
 {
-    private const string BaseURL = "http://0.0.0.0:8080/api";
-    
+    private const string BaseURL = "http://museverse.kro.kr/api";
+    // private const string BaseURL = "http://0.0.0.0:8080/api";
+
     public static IEnumerator CreateAttendance()
     {
         const string path = "accounts/attendance";

@@ -7,7 +7,8 @@ using API.Models;
 
 public class Order : MonoBehaviour
 {
-    private const string BaseURL = "http://0.0.0.0:8080/api";
+    private const string BaseURL = "http://museverse.kro.kr/api";
+    // private const string BaseURL = "http://0.0.0.0:8080/api";
 
     public static IEnumerator CreateOrder(int item,int trade, string status = "order")
     {

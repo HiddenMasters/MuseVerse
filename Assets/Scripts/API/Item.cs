@@ -1,15 +1,14 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEditor.Networking;
 using API.Models;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
-    private const string BaseURL = "http://0.0.0.0:8080/api";
-    private static string _token;
+    private const string BaseURL = "http://museverse.kro.kr/api";
+    // private const string BaseURL = "http://0.0.0.0:8080/api";
 
     public static IEnumerator CreateItem(string name, string format, float price)
     {
@@ -20,7 +19,7 @@ public class Item : MonoBehaviour
         form.AddField("price", price.ToString());
         
         UnityWebRequest request = UnityWebRequest.Post(BaseURL + path, form);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "multipart/form-data");
 
         yield return request.SendWebRequest();
@@ -83,7 +82,7 @@ public class Item : MonoBehaviour
         const string path = "/items";
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();

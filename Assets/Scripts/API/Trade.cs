@@ -8,9 +8,10 @@ using UnityEngine.Networking;
 
 public class Trade : MonoBehaviour
 {
-    private const string BaseURL = "http://0.0.0.0:8080/api";
+    private const string BaseURL = "http://museverse.kro.kr/api";
+    // private const string BaseURL = "http://0.0.0.0:8080/api";
     // private static string _token;
-    private static string _token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwidXNlcm5hbWUiOiJKdW5zdSIsImVtYWlsIjpudWxsLCJleHAiOjE2NDU3NTYzMDF9.-Or121v4BTBbgd_F0dLd-XwWeLwuwxe1x3bdX70GDt0";
+    // private static string _token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwidXNlcm5hbWUiOiJKdW5zdSIsImVtYWlsIjpudWxsLCJleHAiOjE2NDU3NTYzMDF9.-Or121v4BTBbgd_F0dLd-XwWeLwuwxe1x3bdX70GDt0";
 
     private void Start()
     {
@@ -26,7 +27,7 @@ public class Trade : MonoBehaviour
         
         UnityWebRequest request = UnityWebRequest.Post(BaseURL + path, json);
         request.uploadHandler = new UploadHandlerRaw(bytes);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -49,7 +50,7 @@ public class Trade : MonoBehaviour
     {
         string path = string.Format("/trade/{0}", itemId);
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -70,7 +71,7 @@ public class Trade : MonoBehaviour
     {
         string path = string.Format("/trade/{0}", itemId);
         UnityWebRequest request = UnityWebRequest.Delete(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -97,7 +98,7 @@ public class Trade : MonoBehaviour
         
         UnityWebRequest request = UnityWebRequest.Put(BaseURL + path, json);
         request.uploadHandler = new UploadHandlerRaw(bytes); 
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -119,7 +120,7 @@ public class Trade : MonoBehaviour
         const string path = "/trades";
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
@@ -141,7 +142,7 @@ public class Trade : MonoBehaviour
         const string path = "/trades/me";
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
-        request.SetRequestHeader("Authorization", _token);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
 
         yield return request.SendWebRequest();
