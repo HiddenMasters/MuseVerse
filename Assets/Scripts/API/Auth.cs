@@ -67,6 +67,7 @@ public class Auth : MonoBehaviour
             AtomManager.Token = _token;
             
             // LoginPanel 해제
+            AtomManager.LastPanel = "Login Group";
             AtomManager.ClosePanel();
         }
     }
