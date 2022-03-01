@@ -52,14 +52,10 @@ public sealed class AtomManager : MonoBehaviour
     public static int ExhibitionItem { get; set; }
     
     public static int ExhibitionTrade { get; set; }
-    
     public static InventorySerializer[] Inventories { get; set; }
     public static ExhibitionInventorySerializer[] ExhibitionInventories { get; set; }
-    
     public static bool IsPanelActive { get; set; }
-    
     public static string LastPanel { get; set; }
-    
     public static ProfileSerializer Profile { get; set; }
     public static SimpleItemSerializer[] BuyHistories { get; set; }
     public static SimpleItemSerializer[] SellHistories { get; set; }
