@@ -13,12 +13,6 @@ public class Exhibition : MonoBehaviour
     // TODO: Needs Refactoring
     public int hall;
     public int num;
-    public GameObject nameText;
-    public GameObject authorText;
-    public GameObject ownerText;
-    public GameObject priceText;
-    public GameObject expireText;
-    public GameObject painting;
     
     private SpriteRenderer _spriteRenderer;
     private Image _image;
