@@ -3,269 +3,235 @@ using System.Collections.Generic;
 
 namespace API.Models
 {
+    // Attendance Serializer
     [Serializable]
-    public class RegisterSerializer
+    public class AttendanceSerializer
+    {
+        public int profile;
+        public DateTime attendance_date;
+    }
+
+    [Serializable]
+    public class AttendancesSerializer
+    {
+        public AttendanceSerializer[] attendances;
+    }
+
+    // Auth Serializer
+    [Serializable]
+    public class AuthLoginSerializer
     {
         public string username;
         public string password;
-        public string nickname;
-        public string gender;
-        public string email;
-        
-        public RegisterSerializer(string username, string password, string nickname, bool gender, string email = null)
+
+        public AuthLoginSerializer(string username, string password)
         {
             this.username = username;
             this.password = password;
-            this.nickname = nickname;
-            this.gender = gender ? "male" : "female";
-            this.email = email;
         }
     }
     
     [Serializable]
-    public class LoginSerializer
+    public class AuthUserCreateSerializer
     {
         public string username;
         public string password;
+        public string email;
+        public string nickname;
 
-        public LoginSerializer(string username, string password)
+        public AuthUserCreateSerializer(string username, string password, string email, string nickname)
         {
             this.username = username;
             this.password = password;
+            this.email = email;
+            this.nickname = nickname;
         }
     }
 
     [Serializable]
-    public class AuthenticationSerializer
+    public class AuthRenameSerializer
+    {
+        public string nickname;
+
+        public AuthRenameSerializer(string nickname)
+        {
+            this.nickname = nickname;
+        }
+    }
+
+    [Serializable]
+    public class AuthUserSerializer
+    {
+        public int id;
+        public string username;
+        public string email;
+    }
+
+    [Serializable]
+    public class AuthProfileSerializer
+    {
+        public int id;
+        public string nickname;
+        public float money;
+    }
+
+    [Serializable]
+    public class AuthUserProfileSerializer
+    {
+        public int id;
+        public DateTime created_at;
+        public DateTime updated_at;
+        public string username;
+        public string email;
+        public AuthProfileSerializer profile;
+    }
+
+    [Serializable]
+    public class TokenSerializer
     {
         public string authorization;
     }
 
+    // Exhibition Serializer
     [Serializable]
-    public class TradeSerializer
+    public class ExhibitionCreateSerializer
     {
         public int item;
-        public float orderPrice;
-        public float immediatePrice;
+        public int hall;
+        public int num;
 
-        public TradeSerializer(int item, float orderPrice, float immediatePrice)
+        public ExhibitionCreateSerializer(int item, int hall, int num)
         {
             this.item = item;
-            this.orderPrice = orderPrice;
-            this.immediatePrice = immediatePrice;
-        }
-    }
-    
-    [Serializable]
-    public class ExhibitionTradeSerializer
-    {
-        public int id;
-        public string owner;
-        public int item;
-        public float orderPrice;
-        public float immediatePrice;
-
-        public ExhibitionTradeSerializer(int id, string owner, int item, float orderPrice, float immediatePrice)
-        {
-            this.id = id;
-            this.owner = owner;
-            this.item = item;
-            this.orderPrice = orderPrice;
-            this.immediatePrice = immediatePrice;
-        }
-    }
-
-    [Serializable]
-    public class TradeItemSerializer
-    {
-        public int id;
-        public int owner;
-        public int item;
-        public DateTime expire;
-        public float order_price;
-        public float immediate_price;
-        public bool is_sell;
-    }
-
-    [Serializable]
-    public class TradeListSerializer
-    {
-        public List<TradeItemSerializer> ItemSerializers;
-    }
-    
-    [Serializable]
-    public class TradeExtendSerializer
-    {
-        public int extendDays;
-
-        public TradeExtendSerializer(int extendDays)
-        {
-            this.extendDays = extendDays;
-        }
-    }
-
-    [Serializable]
-    public class ItemSerializer
-    {
-        public string name;
-        public string format;
-        public float price;
-        public int id;
-        public int author;
-        public string upload;
-
-        public ItemSerializer(string name, string format, float price, int id, int author, string upload)
-        {
-            this.name = name;
-            this.format = format;
-            this.price = price;
-            this.id = id;
-            this.author = author;
-            this.upload = upload;
-        }
-    }
-    
-    [Serializable]
-    public class ExhibitionItemSerializer
-    {
-        public string name;
-        public float price;
-        public int id;
-        public string author;
-
-        public ExhibitionItemSerializer(string name, float price, int id, string author)
-        {
-            this.name = name;
-            this.price = price;
-            this.id = id;
-            this.author = author;
-        }
-    }
-
-    [Serializable]
-    public class InventorySerializer
-    {
-        public int id;
-        public string upload;
-
-        public InventorySerializer(int id, string upload)
-        {
-            this.id = id;
-            this.upload = upload;
-        }
-    }
-
-    [Serializable]
-    public class InventoriesSerializer
-    {
-        public InventorySerializer[] inventories;
-    }
-
-    [Serializable]
-    public class SimpleItemSerializer
-    {
-        public int id;
-        public string name;
-        public float price;
-        public string upload;
-        public DateTime created_at;
-    }
-
-    [Serializable]
-    public class TradeHistorySerializer
-    {
-        public SimpleItemSerializer[] histories;
-    }
-    
-    [Serializable]
-    public class ExhibitionInventorySerializer
-    {
-        public SimpleItemSerializer item;
-        public DateTime expire;
-    }
-
-    [Serializable]
-    public class ExhibitionInventoriesSerializer
-    {
-        public ExhibitionInventorySerializer[] exhibitionInventories;
-    }
-    
-    [Serializable]
-    public class ItemsURLSerializer
-    {
-        public string[] urls;
-    }
-
-    [Serializable]
-    public class OrderCreateSerializer
-    {
-        public int item;
-        public int trade;
-        public string status = "buy";
-
-        public OrderCreateSerializer(int item, int trade, string status)
-        {
-            this.item = item;
-            this.trade = trade;
-            this.status = status;
-        }
-    }
-    [Serializable]
-    public class OrderSerializer
-    {
-        public int buyer;
-        public int item;
-        public float price;
-        public int trade;
-        public string status;
-
-        public OrderSerializer(int buyer, int item, float price, int trade, string status)
-        {
-            this.buyer = buyer;
-            this.item = item;
-            this.price = price;
-            this.trade = trade;
-            this.status = status;
+            this.hall = hall;
+            this.num = num;
         }
     }
 
     [Serializable]
     public class ExhibitionSerializer
     {
-        public ExhibitionItemSerializer item;
-        public ExhibitionTradeSerializer trade;
+        public int id;
+        public int item;
+        public int trade;
+        public int owner;
         public int hall;
         public int num;
         public DateTime expire;
-        public int max_widht;
-        public int max_height;
+    }
 
-        public ExhibitionSerializer(ExhibitionItemSerializer item, ExhibitionTradeSerializer trade, int hall, int num, DateTime expire, int maxWidht, int maxHeight)
+    [Serializable]
+    public class ExhibitionsSerializer
+    {
+        public ExhibitionSerializer[] exhibitions;
+    }
+
+    [Serializable]
+    public class ExhibitionDetailSerializer
+    {
+        public ItemDetailSerializer item;
+        public TradeDetailSerializer trade;
+        public string owner;
+        public DateTime expire;
+    }
+    
+    // Item Serializer
+    [Serializable]
+    public class ItemSerializer
+    {
+        public int id;
+        public string name;
+        public int author;
+        public string format;
+        public string upload;
+    }
+
+    [Serializable]
+    public class ItemsSerializer
+    {
+        public ItemSerializer[] items;
+    }
+
+    [Serializable]
+    public class ItemDetailSerializer
+    {
+        public int id;
+        public string name;
+        public string author;
+        public string format;
+        public string upload;
+    }
+    
+    // PrivateRoom Serializer
+    [Serializable]
+    public class PrivateExhibitionCreateSerializer
+    {
+        public int item;
+        public int num;
+
+        public PrivateExhibitionCreateSerializer(int item, int num)
         {
             this.item = item;
-            this.trade = trade;
-            this.hall = hall;
             this.num = num;
-            this.expire = expire;
-            max_widht = maxWidht;
-            max_height = maxHeight;
         }
     }
 
     [Serializable]
-    public class ProfileSerializer
+    public class PrivateExhibitionSerializer
     {
         public int id;
-        public int user;
-        public string nickname;
-        public float money;
+        public int item;
+        public int num;
+    }
 
-        public ProfileSerializer(int id, int user, string nickname, float money)
+    [Serializable]
+    public class PrivateExhibitionDetailSerializer
+    {
+        public string owner;
+        public ItemDetailSerializer item;
+    }
+    
+    // Trade Serializer
+    [Serializable]
+    public class TradeCreateSerializer
+    {
+        public int item;
+        public float price;
+
+        public TradeCreateSerializer(int item, float price)
         {
-            this.id = id;
-            this.user = user;
-            this.nickname = nickname;
-            this.money = money;
+            this.item = item;
+            this.price = price;
         }
     }
+
+    [Serializable]
+    public class TradeSerializer
+    {
+        public int seller;
+        public int item;
+        public int buyer;
+        public DateTime expire;
+        public float price;
+        public bool is_sell;
+    }
+
+    [Serializable]
+    public class TradesSerializer
+    {
+        public TradeSerializer[] histories;
+    }
+
+    [Serializable]
+    public class TradeDetailSerializer
+    {
+        public int id;
+        public string seller;
+        public ItemDetailSerializer item;
+        public string buyer;
+        public DateTime expire;
+        public float price;
+        public bool is_sell;
+    }
+    
 }

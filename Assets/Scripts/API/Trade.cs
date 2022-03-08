@@ -8,20 +8,19 @@ using UnityEngine.Networking;
 
 public class Trade : MonoBehaviour
 {
-    private const string BaseURL = "http://museverse.kro.kr/api";
-    // private const string BaseURL = "http://0.0.0.0:8080/api";
-    // private static string _token;
-    // private static string _token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwidXNlcm5hbWUiOiJKdW5zdSIsImVtYWlsIjpudWxsLCJleHAiOjE2NDU3NTYzMDF9.-Or121v4BTBbgd_F0dLd-XwWeLwuwxe1x3bdX70GDt0";
+    // private const string BaseURL = "http://museverse.kro.kr/api";
+    private const string BaseURL = "http://0.0.0.0:8080/api";
 
     private void Start()
     {
         StartCoroutine(GetTrades());
     }
 
-    public static IEnumerator CreateTrade(int item, float orderPrice, float immediatePrice)
+    public static IEnumerator PostTrade(int item, float price)
     {
         const string path = "/trade";
-        TradeSerializer serializer = new TradeSerializer(item, orderPrice, immediatePrice);
+
+        TradeCreateSerializer serializer = new TradeCreateSerializer(item, price);
         string json = JsonUtility.ToJson(serializer);
         byte[] bytes = Encoding.UTF8.GetBytes(json);
         
@@ -29,29 +28,28 @@ public class Trade : MonoBehaviour
         request.uploadHandler = new UploadHandlerRaw(bytes);
         request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
+        request.timeout = 1;
 
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(request.error);
-            
-            // 이미 올려져 있는 아이템인 경우 -> 
-            
-            // 본인의 아이템이 아닌 경우 ->
         }
         else
         {
-            
+            // Trade 정상 등록 Alert
         }
     }
 
-    public static IEnumerator GetTradeById(int itemId)
+    public static IEnumerator GetTrade(int tradeId)
     {
-        string path = string.Format("/trade/{0}", itemId);
+        string path = string.Format("/trade/{0}", tradeId);
+        
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
         request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
+        request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -63,55 +61,70 @@ public class Trade : MonoBehaviour
         }
         else
         {
-            TradeItemSerializer tradeItem = JsonUtility.FromJson<TradeItemSerializer>(request.downloadHandler.text);
+            TradeDetailSerializer trade = JsonUtility.FromJson<TradeDetailSerializer>(request.downloadHandler.text);
         }
     }
 
-    public static IEnumerator DeleteTrade(int itemId)
+    public static IEnumerator DeleteTrade(int tradeId)
     {
-        string path = string.Format("/trade/{0}", itemId);
+        string path = string.Format("/trade/{0}", tradeId);
+        
         UnityWebRequest request = UnityWebRequest.Delete(BaseURL + path);
         request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
+        request.timeout = 1;
 
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(request.error);
-            
-            // 본인의 아이템이 아닌 경우
         }
         else
         {
-            // Trade가 정상적으로 삭제됨.
+            // Trade가 정상적으로 삭제 Alert
         }
     }
 
-    public static IEnumerator ExtendTrade(int itemId, int extendDays = 14)
+    public static IEnumerator PutTradeBuy(int tradeId)
     {
-        string path = string.Format("/trade/{0}/extend", itemId);
+        string path = string.Format("/trade/{0}", tradeId);
         
-        TradeExtendSerializer serializer = new TradeExtendSerializer(extendDays);
-        string json = JsonUtility.ToJson(serializer);
-        byte[] bytes = Encoding.UTF8.GetBytes(json);
-        
-        UnityWebRequest request = UnityWebRequest.Put(BaseURL + path, json);
-        request.uploadHandler = new UploadHandlerRaw(bytes); 
+        UnityWebRequest request = UnityWebRequest.Put(BaseURL + path, String.Empty);
         request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
+        request.timeout = 1;
 
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(request.error);
-            
-            // 본인의 아이템이 아닌 경우
         }
         else
         {
-            // 정상적으로 Trade가 연장됨
+            // 정상 구매 Alert
+        }
+    }
+
+    public static IEnumerator PutTradeExtend(int tradeId)
+    {
+        string path = string.Format("/trade/{0}/extend", tradeId);
+        
+        UnityWebRequest request = UnityWebRequest.Put(BaseURL + path, String.Empty);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.timeout = 1;
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            // 정상적으로 Trade가 연장 Alert
         }
     }
 
@@ -122,6 +135,7 @@ public class Trade : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
         request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
+        request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -131,31 +145,7 @@ public class Trade : MonoBehaviour
         }
         else
         {
-            // TODO: Fix Trade Serializer
-            TradeListSerializer tradeList = JsonUtility.FromJson<TradeListSerializer>(request.downloadHandler.text);
-            Debug.Log(tradeList);
-        }
-    }
-
-    public static IEnumerator GetMyTrades()
-    {
-        const string path = "/trades/me";
-        
-        UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
-        request.SetRequestHeader("Authorization", AtomManager.Token);
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        yield return request.SendWebRequest();
-        
-        if (request.result != UnityWebRequest.Result.Success)
-        {   
-            Debug.Log(request.error);
-        }
-        else
-        {
-            // TODO: Fix Trade Serializer
-            TradeListSerializer tradeList = JsonUtility.FromJson<TradeListSerializer>(request.downloadHandler.text);
-            Debug.Log(tradeList);
+            TradesSerializer trades = JsonUtility.FromJson<TradesSerializer>(request.downloadHandler.text);
         }
     }
 }
