@@ -102,4 +102,13 @@ public class MyInfo : MonoBehaviour
                 break;
         }
     }
+
+    public static void RefreshStatus()
+    {
+        AtomManager.StartGetInventories();
+        AtomManager.StartGetExhibitions();
+        AtomManager.StartGetUserProfile();
+        AtomManager.StartGetBuyHistories();
+        AtomManager.StartGetSellHistories();
+    }
 }

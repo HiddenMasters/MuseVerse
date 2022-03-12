@@ -35,7 +35,8 @@ public class Exhibition : MonoBehaviour
         {
             ExhibitionSerializer exhibition = JsonUtility.FromJson<ExhibitionSerializer>(request.downloadHandler.text);
             Func.RefreshExhibition();
-            InventoryGroup.LoadInventories();
+            AtomManager.Refresh();
+            AtomManager.OpenAlertPanel("정상적으로 전시 되었습니다");
         }
     }
 
@@ -58,8 +59,8 @@ public class Exhibition : MonoBehaviour
         {
             // 정상 연기 표시
             ExhibitionSerializer exhibition = JsonUtility.FromJson<ExhibitionSerializer>(request.downloadHandler.text);
-            // exhibition.expire 를 통해 현재 만기 변경
-            
+            Func.RefreshExhibition();
+            AtomManager.OpenAlertPanel("정상적으로 연장 되었습니다!");
         }
     }
 

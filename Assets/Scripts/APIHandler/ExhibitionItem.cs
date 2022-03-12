@@ -42,6 +42,8 @@ public class ExhibitionItem : MonoBehaviour
     {
         AtomManager.clickedHall = hall;
         AtomManager.clickedNum = num;
+        AtomManager.SelectedExhibition = _exhibition.trade.id;
+        
         
         if (_exhibition != null)
         {

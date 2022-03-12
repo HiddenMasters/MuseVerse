@@ -32,7 +32,11 @@ public sealed class AtomManager : MonoBehaviour
         StartGetBuyHistories();
         StartGetSellHistories();
     }
-    
+
+    public static void Refresh()
+    {
+        MyInfo.RefreshStatus();
+    }
 
     // public static string Token { get; set; }
     public static string Token
@@ -40,7 +44,7 @@ public sealed class AtomManager : MonoBehaviour
         get
         {
             return
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJzdW5zdWtpbmciLCJlbWFpbCI6InN1bnN1a2luZ0BnbWFpbC5jb20iLCJleHAiOjE2NDcwOTkxNTJ9.R3aO0RQqsQ52DRvVYibaa5Y_Rll3azQY-HY-MhAcfRs";
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJzdW5zdWtpbmciLCJlbWFpbCI6InN1bnN1a2luZ0BnbWFpbC5jb20iLCJleHAiOjE2NDcyMjM3Mzl9.MxAkjwevjLWTSqL05HE35OMDS7Dsq_AfBtMX6PSibN0";
         }
         set
         {
@@ -64,7 +68,9 @@ public sealed class AtomManager : MonoBehaviour
     public static int UploadTarget { get; set; }
     public static string ConfirmType { get; set; }
     public static string InputType { get; set; }
-    
+    public static int ExtendExhibition { get; set; }
+    public static int ChangePriceTrade { get; set; }
+    public static int SelectedExhibition { get; set; }
     
     public static int ExhibitionInventoryNumber { get; set; }
     
@@ -100,6 +106,20 @@ public sealed class AtomManager : MonoBehaviour
         RectTransform transform = gameObject.GetComponent<RectTransform>();
         transform.anchoredPosition = Vector3.zero;
         LastPanel = "Input Group";
+    }
+
+    public static void OpenAlertPanel(string message)
+    {
+        if (IsPanelActive)
+        {
+            ClosePanel();
+        }
+        IsPanelActive = true;
+        GameObject gameObject = GameObject.Find("OK Group");
+        gameObject.transform.GetChild(0).GetComponent<Text>().text = message;
+        RectTransform transform = gameObject.GetComponent<RectTransform>();
+        transform.anchoredPosition = Vector3.zero;
+        LastPanel = "OK Group";
     }
     
     public static void OpenConfirmPanel(string message)
@@ -244,6 +264,11 @@ public sealed class AtomManager : MonoBehaviour
     public static void StartPutTradeExtend(int tradeId)
     {
         Instance.StartCoroutine(Trade.PutTradeExtend(tradeId));
+    }
+
+    public static void StartPutTradePrice(int tradeId, float price)
+    {
+        Instance.StartCoroutine(Trade.PutTradePrice(tradeId, price));
     }
 
     public static void StartGetTrades()
