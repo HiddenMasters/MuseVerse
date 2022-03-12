@@ -55,11 +55,11 @@ namespace SimpleDrawing
                             Vector2 currentTexCoord = hitInfo.textureCoord;
                             if (erase)
                             {
-                                drawObject.Erase(currentTexCoord, previousTexCoord, penWidth);
+                                drawObject.Erase(currentTexCoord, previousTexCoord, (int) penWidth);
                             }
                             else
                             {
-                                drawObject.Draw(currentTexCoord, previousTexCoord, penWidth, penColor);
+                                drawObject.Draw(currentTexCoord, previousTexCoord, (int) penWidth, penColor);
                             }
                             previousTexCoord = currentTexCoord;
                         }

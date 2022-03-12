@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
-public class MoveTest : MonoBehaviour
+public class MoveTest : MonoBehaviourPun
 {
 
     /*************************************************************************
@@ -160,6 +161,7 @@ public class MoveTest : MonoBehaviour
     
     /*              선형보간된 현제 휠 입력 값            */
     private float _currentWheel;
+    private GameObject _brush;
 
     
     [SerializeField]
@@ -198,10 +200,16 @@ public class MoveTest : MonoBehaviour
     {
         InitComponents();
         InitSettings();
+        _brush = GameObject.Find("Brush");
     }
 
     private void Update()
     {
+        if (!this.photonView.IsMine)
+        {
+            return;
+        }
+        
         _deltaTime = Time.deltaTime;
         
         // Panel이 켜지면 돌면 안되는 것
@@ -353,6 +361,7 @@ public class MoveTest : MonoBehaviour
         
         // Y축 속도는 유지하면서 XZ평면 이동
         Com.rigid.velocity = new Vector3(worldMoveDir.x, Com.rigid.velocity.y, worldMoveDir.z);
+        _brush.transform.position = Com.rigid.position + new Vector3(0.5917069f, 0.6823401f, 0.644964f);
         // Com.controller.Move(_worldMoveDir * Time.deltaTime);
     }
 

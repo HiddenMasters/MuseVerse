@@ -51,4 +51,11 @@ public class TradeGroup : MonoBehaviour
             }
         }
     }
+
+    public void BuyExhibition()
+    {
+        AtomManager.ClosePanel();
+        AtomManager.ConfirmType = "BUY";
+        AtomManager.OpenConfirmPanel("정말 구매 하시겠습니까?");
+    }
 }
