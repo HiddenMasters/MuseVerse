@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class MoveTest : MonoBehaviour
 {
+
     /*************************************************************************
     *                               Definitions
     *************************************************************************/
@@ -182,6 +183,8 @@ public class MoveTest : MonoBehaviour
     /*              월드 이동 벡터              */
     [SerializeField]
     private Vector3 worldMoveDir;
+    
+    public static GameObject RoomListGroup;
 
     #endregion
     
@@ -628,6 +631,8 @@ public class MoveTest : MonoBehaviour
             }
             else if (other.gameObject.name == "PrivatePortal")
             {
+                AtomManager.OpenPanel("Room List Group");
+                
                 AsyncOperation _async;
                 _async = SceneManager.LoadSceneAsync("PrivateScene");
             }
