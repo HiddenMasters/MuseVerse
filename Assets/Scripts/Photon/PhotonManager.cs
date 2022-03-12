@@ -17,10 +17,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         // 같은 룸의 유저들에게 자동으로 씬을 로딩
         PhotonNetwork.AutomaticallySyncScene = true;
+        
         // 같은 버전의 유저끼리 접속 허용
         PhotonNetwork.GameVersion = version;
+        
         // 유저 아이디 할당
         PhotonNetwork.NickName = userID;
+        
         //포톤 서버와 통신 횟수 설정. 초당 30회
         Debug.Log(PhotonNetwork.SendRate);
         // 서버 접속
@@ -39,11 +42,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
-        PhotonNetwork.JoinRoom("MainRoom");
+        // PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
+        PhotonNetwork.JoinRandomRoom();
     }
     
     public override void OnJoinRandomFailed(short returnCode, string message) {
-        PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
+        // PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
     }
 
     // 룸 생성이 완료된 후 호출되는 콜백 함수
@@ -64,12 +68,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         {
             Debug.Log($"{player.Value.NickName},{player.Value.ActorNumber}");
         }
+        PhotonNetwork.LoadLevel("MainScene");
     }
 
-    void CreatePlayer()
-    {
-        float pos = Random.Range(10f, 10f); // -5 < x < 5, 0 < z < 5  
-    }
 
     public void CreateRoom()
     {
