@@ -25,12 +25,12 @@ public sealed class AtomManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void DefaultSetting()
+    public static void DefaultSetting()
     {
         InventoryGroup.LoadInventories();
-        StartGetMyInfoProfile();
-        StartGetMyInfoBuyHistory();
-        StartGetMyInfoSellHistory();
+        StartGetUserProfile();
+        StartGetBuyHistories();
+        StartGetSellHistories();
     }
     
 
@@ -40,7 +40,7 @@ public sealed class AtomManager : MonoBehaviour
         get
         {
             return
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwidXNlcm5hbWUiOiJKdW5zdSIsImVtYWlsIjpudWxsLCJleHAiOjE2NDYwMzk0MTB9.LOEknC01Xs_yEh2nXzrObWin8yyVov2dgT6tEyYk9ig";
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJzdW5zdWtpbmciLCJlbWFpbCI6InN1bnN1a2luZ0BnbWFpbC5jb20iLCJleHAiOjE2NDcwOTkxNTJ9.R3aO0RQqsQ52DRvVYibaa5Y_Rll3azQY-HY-MhAcfRs";
         }
         set
         {
@@ -52,13 +52,18 @@ public sealed class AtomManager : MonoBehaviour
     public static int ExhibitionItem { get; set; }
     
     public static int ExhibitionTrade { get; set; }
-    public static InventorySerializer[] Inventories { get; set; }
-    public static ExhibitionInventorySerializer[] ExhibitionInventories { get; set; }
+    public static ItemSerializer[] Inventories { get; set; }
+    public static ExhibitionSerializer[] ExhibitionInventories { get; set; }
     public static bool IsPanelActive { get; set; }
     public static string LastPanel { get; set; }
-    public static ProfileSerializer Profile { get; set; }
-    public static SimpleItemSerializer[] BuyHistories { get; set; }
-    public static SimpleItemSerializer[] SellHistories { get; set; }
+    public static AuthUserProfileSerializer Profile { get; set; }
+    public static TradeSerializer[] BuyHistories { get; set; }
+    public static TradeSerializer[] SellHistories { get; set; }
+    public static int clickedHall { get; set; }
+    public static int clickedNum { get; set; }
+    public static int UploadTarget { get; set; }
+    public static string ConfirmType { get; set; }
+    public static string InputType { get; set; }
     
     
     public static int ExhibitionInventoryNumber { get; set; }
@@ -77,32 +82,62 @@ public sealed class AtomManager : MonoBehaviour
 
     public static void OpenPanel(string panel)
     {
+        if (!IsPanelActive)
+        {
+            IsPanelActive = true;
+            GameObject gameObject = GameObject.Find(panel);
+            RectTransform transform = gameObject.GetComponent<RectTransform>();
+            transform.anchoredPosition = Vector3.zero;
+            LastPanel = panel;
+        }
+    }
+
+    public static void OpenInputPanel(string message)
+    {
         IsPanelActive = true;
-        GameObject gameObject = GameObject.Find(panel);
+        GameObject gameObject = GameObject.Find("Input Group");
+        gameObject.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = message;
         RectTransform transform = gameObject.GetComponent<RectTransform>();
         transform.anchoredPosition = Vector3.zero;
-        LastPanel = panel;
+        LastPanel = "Input Group";
     }
     
+    public static void OpenConfirmPanel(string message)
+    {
+        IsPanelActive = true;
+        GameObject gameObject = GameObject.Find("Confirm Group");
+        gameObject.transform.GetChild(0).GetComponent<Text>().text = message;
+        RectTransform transform = gameObject.GetComponent<RectTransform>();
+        transform.anchoredPosition = Vector3.zero;
+        LastPanel = "Confirm Group";
+    }
+    
+    // Auth
     public static void StartUserLogin(string username, string password)
     {
         username = username.Replace("\u200b", "");
         password = password.Replace("\u200b", "");
-        Instance.StartCoroutine(Auth.UserLogin(username, password));
+        Instance.StartCoroutine(Auth.PostLogin(username, password));
     }
 
-    public static void StartUserRegister(string email, string username, string password, string nickname, bool gender)
+    public static void StartUserRegister(string email, string username, string password, string nickname)
     {
         email = email.Replace("\u200b", "");
         username = username.Replace("\u200b", "");
         password = password.Replace("\u200b", "");
         nickname = nickname.Replace("\u200b", "");
-        Instance.StartCoroutine(Auth.UserRegister(username, password, nickname, gender, email));
+        Instance.StartCoroutine(Auth.PostRegister(username, password, nickname, email));
+    }
+    
+    // Accounts
+    public static void StartGetUserProfile()
+    {
+        Instance.StartCoroutine(Account.GetUserProfile());
     }
 
-    public static void StartCreateOrder(int item, int trade)
+    public static void StartPutProfileNickname(string nickname)
     {
-        Instance.StartCoroutine(Order.CreateOrder(item, trade));
+        Instance.StartCoroutine(Account.PutProfileNickname(nickname));
     }
 
     public static void StartGetInventories()
@@ -110,38 +145,109 @@ public sealed class AtomManager : MonoBehaviour
         Instance.StartCoroutine(Account.GetInventories());
     }
 
-    public static void StartGetExhibitionInventories()
+    public static void StartGetExhibitions()
     {
-        Instance.StartCoroutine(Account.GetExhibitionInventories());
+        Instance.StartCoroutine(Account.GetExhibitions());
     }
 
-    public static void StartGetImageByItem(int id, SpriteRenderer renderer, Image image)
+    public static void StartGetBuyHistories()
     {
-        Instance.StartCoroutine(Item.GetImageByItem(id, renderer, image));
+        Instance.StartCoroutine(Account.GetBuyHistories());
     }
 
-    public static void StartGetItemById(int id)
+    public static void StartGetSellHistories()
     {
-        Instance.StartCoroutine(Item.GetItemById(id));
+        Instance.StartCoroutine(Account.GetSellHistories());
     }
 
-    public static void StartExtendExhibition(int item)
+    public static void StartPostAttendances()
     {
-        Instance.StartCoroutine(Trade.ExtendTrade(item, 14));
+        Instance.StartCoroutine(Account.PostAttendances());
     }
 
-    public static void StartGetMyInfoProfile()
+    public static void StartGetAttendances()
     {
-        Instance.StartCoroutine(Account.GetMyInfoProfile());
+        Instance.StartCoroutine(Account.GetAttendances());
+    }
+    
+    // Exhibitions
+    public static void StartPostExhibition(int item, float price, int hall, int num)
+    {
+        Instance.StartCoroutine(Exhibition.PostExhibition(item, price, hall, num));
     }
 
-    public static void StartGetMyInfoBuyHistory()
+    public static void StartPutExhibition(int exhibitionId)
     {
-        Instance.StartCoroutine(Account.GetMyInfoBuyHistory());
+        Instance.StartCoroutine(Exhibition.PutExhibition(exhibitionId));
     }
 
-    public static void StartGetMyInfoSellHistory()
+    public static void StartDeleteExhibition(int exhibitionId)
     {
-        Instance.StartCoroutine(Account.GetMyInfoSellHistory());
+        Instance.StartCoroutine(Exhibition.DeleteExhibition(exhibitionId));
+    }
+    
+    // Items
+    // TODO
+    public static void StartPostItem(string name, string format) { }
+
+    public static void StartGetItem(int itemId)
+    {
+        Instance.StartCoroutine(Item.GetItem(itemId));
+    }
+
+    public static void StartDeleteItem(int itemId)
+    {
+        Instance.StartCoroutine(Item.DeleteItem(itemId));
+    }
+
+    public static void StartGetItemImage(int itemId, SpriteRenderer renderer, Image image)
+    {
+        Instance.StartCoroutine(Item.GetItemImage(itemId, renderer, image));
+    }
+    
+    // Private
+    public static void StartPostPrivate(int item, int num)
+    {
+        Instance.StartCoroutine(Private.PostPrivate(item, num));
+    }
+
+    public static void StartGetPrivate(int privateId)
+    {
+        Instance.StartCoroutine(Private.GetPrivate(privateId));
+    }
+
+    public static void StartDeletePrivate(int privateId)
+    {
+        Instance.StartCoroutine(Private.DeletePrivate(privateId));
+    }
+
+    public static void StartPostTrade(int item, float price)
+    {
+        Instance.StartCoroutine(Trade.PostTrade(item, price));
+    }
+
+    public static void StartGetTrade(int tradeId)
+    {
+        Instance.StartCoroutine(Trade.GetTrade(tradeId));
+    }
+
+    public static void StartDeleteTrade(int tradeId)
+    {
+        Instance.StartCoroutine(Trade.DeleteTrade(tradeId));
+    }
+
+    public static void StartPutTradeBuy(int tradeId)
+    {
+        Instance.StartCoroutine(Trade.PutTradeBuy(tradeId));
+    }
+
+    public static void StartPutTradeExtend(int tradeId)
+    {
+        Instance.StartCoroutine(Trade.PutTradeExtend(tradeId));
+    }
+
+    public static void StartGetTrades()
+    {
+        Instance.StartCoroutine(Trade.GetTrades());
     }
 }
