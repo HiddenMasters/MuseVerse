@@ -11,7 +11,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
      // 버전 입력
     private readonly string version = "1.0f";
     // 사용자 아이디 입력
-    private string userID = AtomManager.Profile.nickname;
+    private string userID = "youknow";
 
     void Awake()
     {
@@ -39,7 +39,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
-        // PhotonNetwork.JoinRandomRoom();     // 랜덤 매치메이킹 기능 제공
+        // Debug.Log(PhotonNetwork.CurrentLobby.);
+        CreateRoom();     // 랜덤 매치메이킹 기능 제공
     }
 
     // 룸 생성이 완료된 후 호출되는 콜백 함수
@@ -76,6 +77,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ro.IsVisible = true;    // 로비에서 룸 목록에 노출 시킬지 여부
 
         // 룸 생성
-        PhotonNetwork.CreateRoom("Rivate Room" + AtomManager.Profile.id, ro);
+        PhotonNetwork.CreateRoom("Rivate Room", ro);
     }
 }

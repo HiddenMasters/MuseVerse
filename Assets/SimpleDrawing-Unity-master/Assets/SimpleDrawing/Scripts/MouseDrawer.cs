@@ -1,23 +1,45 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace SimpleDrawing
 {
     public class MouseDrawer : MonoBehaviour
     {
-        [SerializeField]
-        Color penColor = Color.red;
+        public static Slider RedSlider;
+        public static Slider GreenSlider;
+        public static Slider BlueSlider;
+        public static Slider SizeSlider;
+        public void setRed(int red)
+        {
+            RedSlider.value = red;
+        }
+        public void setGreen(int green)
+        {
+            GreenSlider.value = green;
+        }
+        public void setBlue(int blue)
+        {
+            BlueSlider.value = blue;
+        }
+        public void setSize(float size)
+        {
+            SizeSlider.value = size;
+        }
 
-        [SerializeField]
-        int penWidth = 3;
+        private Color penColor = Color.black;
+        float penWidth = 3f;
 
         [SerializeField]
         bool erase = false;
-
+ 
         Vector2 defaultTexCoord = Vector2.zero;
         Vector2 previousTexCoord;
 
         void Update()
         {
+            penColor = new Color(RedSlider.value/255f, GreenSlider.value/255f,BlueSlider.value/255f);
+            penWidth = SizeSlider.value;
+            
             bool mouseDown = Input.GetMouseButton(0);
             if (mouseDown)
             {

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Portal
   - Whiteboard
+  - Zone
   layers:
   - Default
   - TransparentFX
