@@ -590,8 +590,7 @@ public class MoveTest : MonoBehaviour
     {
         if (Input.GetKeyDown(Key.showInventory))
         {
-            AtomManager.ClosePanel();
-            AtomManager.OpenPanel("Inventory Group");
+            InventoryGroup.OpenInventory();
         }
 
         if (Input.GetKeyDown(Key.showMyInfo))
