@@ -11,11 +11,11 @@ public class Exhibition : MonoBehaviour
     // private const string BaseURL = "http://museverse.kro.kr/api";
     private const string BaseURL = "http://0.0.0.0:8080/api";
     
-    public static IEnumerator PostExhibition(int item, int hall, int num)
+    public static IEnumerator PostExhibition(int item, float price, int hall, int num)
     {
         const string path = "/exhibition";
 
-        ExhibitionCreateSerializer serializer = new ExhibitionCreateSerializer(item, hall, num);
+        ExhibitionCreateSerializer serializer = new ExhibitionCreateSerializer(item, price, hall, num);
         string json = JsonUtility.ToJson(serializer);
         byte[] bytes = Encoding.UTF8.GetBytes(json);
         
@@ -34,7 +34,8 @@ public class Exhibition : MonoBehaviour
         else
         {
             ExhibitionSerializer exhibition = JsonUtility.FromJson<ExhibitionSerializer>(request.downloadHandler.text);
-            // 정상 생성 UI
+            Func.RefreshExhibition();
+            InventoryGroup.LoadInventories();
         }
     }
 

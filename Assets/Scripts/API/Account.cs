@@ -17,7 +17,7 @@ public class Account : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
         request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
-        request.timeout = 1;
+        // request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -29,6 +29,8 @@ public class Account : MonoBehaviour
         {
             AuthUserProfileSerializer profile =
                 JsonUtility.FromJson<AuthUserProfileSerializer>(request.downloadHandler.text);
+            AtomManager.Profile = profile;
+            MyInfo.SetProfile();
         }
     }
 
@@ -64,7 +66,7 @@ public class Account : MonoBehaviour
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
         request.SetRequestHeader("Authorization", AtomManager.Token);
-        request.timeout = 1;
+        // request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -75,8 +77,10 @@ public class Account : MonoBehaviour
         else
         {
             ItemsSerializer items = JsonUtility.FromJson<ItemsSerializer>(request.downloadHandler.text);
-            // AtomManager.Inventories = serializer.items;
-            // InventoryGroup.SetInventoriesImage();
+            AtomManager.Inventories = items.items;
+            
+            InventoryGroup.SetInventoriesImage();
+            TradeGroup.SetUploadInventories();
         }
     }
     
@@ -86,7 +90,7 @@ public class Account : MonoBehaviour
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
         request.SetRequestHeader("Authorization", AtomManager.Token);
-        request.timeout = 1;
+        // request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -97,8 +101,8 @@ public class Account : MonoBehaviour
         else
         {
             ExhibitionsSerializer exhibitions = JsonUtility.FromJson<ExhibitionsSerializer>(request.downloadHandler.text);
-            // AtomManager.ExhibitionInventories = serializer.exhibitionInventories;
-            // InventoryGroup.SetExhibitionInventories();
+            AtomManager.ExhibitionInventories = exhibitions.exhibitions;
+            InventoryGroup.SetExhibitionInventories();
         }
     }
     
@@ -108,7 +112,7 @@ public class Account : MonoBehaviour
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
         request.SetRequestHeader("Authorization", AtomManager.Token);
-        request.timeout = 1;
+        // request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -119,7 +123,7 @@ public class Account : MonoBehaviour
         else
         {
             TradesSerializer trades = JsonUtility.FromJson<TradesSerializer>(request.downloadHandler.text);
-            // AtomManager.BuyHistories = serializer.histories;
+            AtomManager.BuyHistories = trades.histories;
         }
     }
     
@@ -129,7 +133,7 @@ public class Account : MonoBehaviour
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
         request.SetRequestHeader("Authorization", AtomManager.Token);
-        request.timeout = 1;
+        // request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -140,7 +144,7 @@ public class Account : MonoBehaviour
         else
         {
             TradesSerializer trades = JsonUtility.FromJson<TradesSerializer>(request.downloadHandler.text);
-            // AtomManager.SellHistories = serializer.histories;
+            AtomManager.SellHistories = trades.histories;
         }
     }
     

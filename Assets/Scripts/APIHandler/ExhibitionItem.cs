@@ -19,7 +19,6 @@ public class ExhibitionItem : MonoBehaviour
     private Image _image;
     private ExhibitionDetailSerializer _exhibition;
     private Sprite _sprite;
-    private GameObject _tradeGroup;
     private Text _name, _author, _owner, _price, _expire;
     private bool _flag;
     
@@ -35,45 +34,24 @@ public class ExhibitionItem : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _image = GetComponent<Image>();
-        _tradeGroup = GameObject.Find("Trade Group");
-        StartCoroutine(GetExhibition());
         StartCoroutine(GetExhibitionImage());
+        StartCoroutine(GetExhibition());
     }
     
     private void OnMouseDown()
     {
-        if (!AtomManager.IsPanelActive)
+        AtomManager.clickedHall = hall;
+        AtomManager.clickedNum = num;
+        
+        if (_exhibition != null)
         {
-            ShowTradeGroup();
-            if (_exhibition == null)
-            { 
-                GameObject.Find("Trade Group").transform.Find("Trade").gameObject.SetActive(false);
-                GameObject.Find("Trade Group").transform.Find("Exhibition").gameObject.SetActive(true);
-                
-                GameObject.Find("Trade Painting Image").GetComponent<SpriteRenderer>().sprite = null;
-                GameObject.Find("Trade Painting Image").GetComponent<Image>().sprite = null;
-            }
-            else
-            {
-                GameObject.Find("Trade Group").transform.Find("Exhibition").gameObject.SetActive(false);
-                GameObject.Find("Trade Group").transform.Find("Trade").gameObject.SetActive(true);
-                
-                // TODO: Painting Image -> Trade Panting Image: 이름 변경
-                GameObject.Find("Trade Painting Image").GetComponent<SpriteRenderer>().sprite = _sprite;
-                GameObject.Find("Trade Painting Image").GetComponent<Image>().sprite = _sprite;
-
-                AtomManager.ExhibitionItem = _exhibition.item.id;
-                AtomManager.ExhibitionTrade = _exhibition.trade.id;
-            
-                GameObject.Find("Trade Group").transform.Find("Trade").Find("Painting Description").GetChild(0).GetChild(1).GetComponent<Text>().text = _exhibition.item.name;
-                GameObject.Find("Trade Group").transform.Find("Trade").Find("Painting Description").GetChild(1).GetChild(1).GetComponent<Text>().text = _exhibition.item.author;
-                GameObject.Find("Trade Group").transform.Find("Trade").Find("Painting Description").GetChild(2).GetChild(1).GetComponent<Text>().text = _exhibition.trade.seller;
-                GameObject.Find("Trade Group").transform.Find("Trade").Find("Description").GetChild(0).GetChild(1).GetComponent<Text>().text = _exhibition.trade.price.ToString("N1");
-                GameObject.Find("Trade Group").transform.Find("Trade").Find("Description").GetChild(1).GetChild(1).GetComponent<Text>().text = _exhibition.expire.ToString("yy-MM-dd");
-            }
-            AtomManager.clickedHall = hall;
-            AtomManager.clickedNum = num;
-            Debug.Log("Hall: " + hall + ", Num: " + num);
+            AtomManager.OpenPanel("Trade Group");
+            TradeGroup.SetImage(_sprite);
+            TradeGroup.SetDetail(_exhibition);
+        }
+        else
+        {
+            AtomManager.OpenPanel("Empty Exhibition");
         }
     }
 
@@ -93,19 +71,18 @@ public class ExhibitionItem : MonoBehaviour
         
         UnityWebRequest request = UnityWebRequest.Get(BaseURL + path);
         request.SetRequestHeader("Content-Type", "application/json");
-        request.timeout = 1;
 
         yield return request.SendWebRequest();
         
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(request.error);
+            _exhibition = null;
         }
         else
         {
             ExhibitionDetailSerializer exhibition =
                 JsonUtility.FromJson<ExhibitionDetailSerializer>(request.downloadHandler.text);
-            // Exhibition 데이터 채우기
+            _exhibition = exhibition;
         }
     }
 

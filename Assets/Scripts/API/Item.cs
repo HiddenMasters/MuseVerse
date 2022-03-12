@@ -53,8 +53,8 @@ public class Item : MonoBehaviour
         else
         {
             ItemDetailSerializer item = JsonUtility.FromJson<ItemDetailSerializer>(request.downloadHandler.text);
-            // GameObject.Find("Item Info Name Text").GetComponent<Text>().text = item.name;
-            // GameObject.Find("Item Info Author Text").GetComponent<Text>().text = item.author;
+            GameObject.Find("Item Info Name Text").GetComponent<Text>().text = item.name;
+            GameObject.Find("Item Info Author Text").GetComponent<Text>().text = item.author;
         }
     }
 
@@ -84,8 +84,8 @@ public class Item : MonoBehaviour
         string path = String.Format("/item/{0}/image", itemId);
 
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(BaseURL + path);
-        request.SetRequestHeader("Authorization", AtomManager.Token);
-        request.timeout = 1;
+        // request.SetRequestHeader("Authorization", AtomManager.Token);
+        // request.timeout = 1;
 
         yield return request.SendWebRequest();
 

@@ -25,12 +25,12 @@ public sealed class AtomManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void DefaultSetting()
+    public static void DefaultSetting()
     {
         InventoryGroup.LoadInventories();
-        StartGetMyInfoProfile();
-        StartGetMyInfoBuyHistory();
-        StartGetMyInfoSellHistory();
+        StartGetUserProfile();
+        StartGetBuyHistories();
+        StartGetSellHistories();
     }
     
 
@@ -40,7 +40,7 @@ public sealed class AtomManager : MonoBehaviour
         get
         {
             return
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwidXNlcm5hbWUiOiJKdW5zdSIsImVtYWlsIjpudWxsLCJleHAiOjE2NDYyNjg5MDN9.c9uF3kJRJHChUSvGWXvLPvz9HMJmI20Y6HrgpYOtauI";
+                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJzdW5zdWtpbmciLCJlbWFpbCI6InN1bnN1a2luZ0BnbWFpbC5jb20iLCJleHAiOjE2NDcwOTkxNTJ9.R3aO0RQqsQ52DRvVYibaa5Y_Rll3azQY-HY-MhAcfRs";
         }
         set
         {
@@ -52,15 +52,18 @@ public sealed class AtomManager : MonoBehaviour
     public static int ExhibitionItem { get; set; }
     
     public static int ExhibitionTrade { get; set; }
-    public static ItemsSerializer[] Inventories { get; set; }
-    public static ItemsSerializer[] ExhibitionInventories { get; set; }
+    public static ItemSerializer[] Inventories { get; set; }
+    public static ExhibitionSerializer[] ExhibitionInventories { get; set; }
     public static bool IsPanelActive { get; set; }
     public static string LastPanel { get; set; }
     public static AuthUserProfileSerializer Profile { get; set; }
-    public static TradesSerializer[] BuyHistories { get; set; }
-    public static TradesSerializer[] SellHistories { get; set; }
+    public static TradeSerializer[] BuyHistories { get; set; }
+    public static TradeSerializer[] SellHistories { get; set; }
     public static int clickedHall { get; set; }
     public static int clickedNum { get; set; }
+    public static int UploadTarget { get; set; }
+    public static string ConfirmType { get; set; }
+    public static string InputType { get; set; }
     
     
     public static int ExhibitionInventoryNumber { get; set; }
@@ -79,11 +82,34 @@ public sealed class AtomManager : MonoBehaviour
 
     public static void OpenPanel(string panel)
     {
+        if (!IsPanelActive)
+        {
+            IsPanelActive = true;
+            GameObject gameObject = GameObject.Find(panel);
+            RectTransform transform = gameObject.GetComponent<RectTransform>();
+            transform.anchoredPosition = Vector3.zero;
+            LastPanel = panel;
+        }
+    }
+
+    public static void OpenInputPanel(string message)
+    {
         IsPanelActive = true;
-        GameObject gameObject = GameObject.Find(panel);
+        GameObject gameObject = GameObject.Find("Input Group");
+        gameObject.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = message;
         RectTransform transform = gameObject.GetComponent<RectTransform>();
         transform.anchoredPosition = Vector3.zero;
-        LastPanel = panel;
+        LastPanel = "Input Group";
+    }
+    
+    public static void OpenConfirmPanel(string message)
+    {
+        IsPanelActive = true;
+        GameObject gameObject = GameObject.Find("Confirm Group");
+        gameObject.transform.GetChild(0).GetComponent<Text>().text = message;
+        RectTransform transform = gameObject.GetComponent<RectTransform>();
+        transform.anchoredPosition = Vector3.zero;
+        LastPanel = "Confirm Group";
     }
     
     // Auth
@@ -94,13 +120,13 @@ public sealed class AtomManager : MonoBehaviour
         Instance.StartCoroutine(Auth.PostLogin(username, password));
     }
 
-    public static void StartUserRegister(string email, string username, string password, string nickname, bool gender)
+    public static void StartUserRegister(string email, string username, string password, string nickname)
     {
         email = email.Replace("\u200b", "");
         username = username.Replace("\u200b", "");
         password = password.Replace("\u200b", "");
         nickname = nickname.Replace("\u200b", "");
-        Instance.StartCoroutine(Auth.PostRegister(username, password, nickname, gender, email));
+        Instance.StartCoroutine(Auth.PostRegister(username, password, nickname, email));
     }
     
     // Accounts
@@ -145,9 +171,9 @@ public sealed class AtomManager : MonoBehaviour
     }
     
     // Exhibitions
-    public static void StartPostExhibition(int item, int hall, int num)
+    public static void StartPostExhibition(int item, float price, int hall, int num)
     {
-        Instance.StartCoroutine(Exhibition.PostExhibition(item, hall, num));
+        Instance.StartCoroutine(Exhibition.PostExhibition(item, price, hall, num));
     }
 
     public static void StartPutExhibition(int exhibitionId)

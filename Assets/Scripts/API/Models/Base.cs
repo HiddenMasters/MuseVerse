@@ -97,12 +97,14 @@ namespace API.Models
     public class ExhibitionCreateSerializer
     {
         public int item;
+        public float price;
         public int hall;
         public int num;
 
-        public ExhibitionCreateSerializer(int item, int hall, int num)
+        public ExhibitionCreateSerializer(int item, float price, int hall, int num)
         {
             this.item = item;
+            this.price = price;
             this.hall = hall;
             this.num = num;
         }
@@ -112,8 +114,8 @@ namespace API.Models
     public class ExhibitionSerializer
     {
         public int id;
-        public int item;
-        public int trade;
+        public ItemSerializer item;
+        public TradeSerializer trade;
         public int owner;
         public int hall;
         public int num;
@@ -160,6 +162,7 @@ namespace API.Models
         public string author;
         public string format;
         public string upload;
+        public DateTime created_at;
     }
     
     // PrivateRoom Serializer
@@ -209,7 +212,7 @@ namespace API.Models
     public class TradeSerializer
     {
         public int seller;
-        public int item;
+        public ItemDetailSerializer item;
         public int buyer;
         public DateTime expire;
         public float price;

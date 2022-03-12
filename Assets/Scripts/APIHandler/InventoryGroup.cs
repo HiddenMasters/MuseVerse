@@ -22,12 +22,12 @@ public class InventoryGroup : MonoBehaviour
     public static void LoadInventories()
     {
         AtomManager.StartGetInventories();
-        AtomManager.StartGetExhibitionInventories();
+        AtomManager.StartGetExhibitions();
     }
 
     public static void SetInventoriesImage()
     {
-        InventorySerializer[] inventories = AtomManager.Inventories;
+        ItemSerializer[] inventories = AtomManager.Inventories;
         GameObject gameObject = GameObject.Find("InventoriesContent");
         for (int i = 0; i < inventories.Length; i++)
         {
@@ -37,25 +37,43 @@ public class InventoryGroup : MonoBehaviour
             Transform button = line.GetChild(position);
             SpriteRenderer renderer = button.GetChild(0).GetComponent<SpriteRenderer>();
             Image image = button.GetChild(0).GetComponent<Image>();
-            AtomManager.StartGetImageByItem(inventories[i].id, renderer, image);
+            button.GetChild(1).GetComponent<Text>().text = inventories[i].name;
+            AtomManager.StartGetItemImage(inventories[i].id, renderer, image);
+        }
+
+        for (int i = 0; i < 20; i++)
+        {
+            int childNum = i / 2;
+            int position = i % 2;
+            if (i >= inventories.Length)
+            {
+                gameObject.transform.GetChild(childNum).GetChild(position).gameObject.SetActive(false);
+            }
         }
     }
 
     public static void SetExhibitionInventories()
     {
-        ExhibitionInventorySerializer[] inventories = AtomManager.ExhibitionInventories;
+        ExhibitionSerializer[] inventories = AtomManager.ExhibitionInventories;
         GameObject gameObject = GameObject.Find("ExhibitionInventoriesContent");
         for (int i = 0; i < inventories.Length; i++)
         {
             Transform line = gameObject.transform.GetChild(i);
             SpriteRenderer renderer = line.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>();
             Image image = line.GetChild(0).GetChild(0).GetComponent<Image>();
-            Debug.Log(inventories[i]);
-            AtomManager.StartGetImageByItem(inventories[i].item.id, renderer, image);
-            Transform description = line.GetChild(1);
-            description.GetChild(3).GetComponent<Text>().text = inventories[i].item.name;
-            description.GetChild(4).GetComponent<Text>().text = inventories[i].item.price.ToString("N1");
-            description.GetChild(5).GetComponent<Text>().text = inventories[i].expire.ToString("MM/dd/yyyy");
+            AtomManager.StartGetItemImage(inventories[i].item.id, renderer, image);
+            Transform description = line.GetChild(0).GetChild(1);
+            description.GetChild(0).GetComponent<Text>().text = inventories[i].item.name;
+            description.GetChild(1).GetComponent<Text>().text = inventories[i].trade.price.ToString("N1");
+            description.GetChild(2).GetComponent<Text>().text = inventories[i].expire.ToString("MM/dd/yyyy");
+        }
+        
+        for (int i = 0; i < 10; i++)
+        {
+            if (i >= inventories.Length)
+            {
+                gameObject.transform.GetChild(i).gameObject.SetActive(false);
+            }
         }
     }
 
@@ -66,17 +84,17 @@ public class InventoryGroup : MonoBehaviour
             return;
         }
         AtomManager.ClosePanel();
-        DetailSetting(AtomManager.Inventories[number].id);
+        DetailSetting(AtomManager.Inventories[number].id, AtomManager.Inventories[number]);
         AtomManager.OpenPanel("Item Info Group");
     }
 
-    private static void DetailSetting(int number)
+    private static void DetailSetting(int number, ItemSerializer item)
     {
-        Transform transform = GameObject.Find("Item Info Group").transform.GetChild(0).GetChild(0);
-        SpriteRenderer renderer = transform.GetComponent<SpriteRenderer>();
-        Image image = transform.GetComponent<Image>();
-        AtomManager.StartGetImageByItem(number, renderer, image);
-        AtomManager.StartGetItemById(number);
+        Transform temp = GameObject.Find("Item Info Group").transform.GetChild(0);
+        SpriteRenderer renderer = temp.GetComponent<SpriteRenderer>();
+        Image image = temp.GetComponent<Image>();
+        AtomManager.StartGetItemImage(number, renderer, image);
+        AtomManager.StartGetItem(number);
     }
 
     public static void ShowExhibitionDetail(int number)
@@ -90,11 +108,11 @@ public class InventoryGroup : MonoBehaviour
         
         GameObject extendGroup = GameObject.Find("Extend Group");
         AtomManager.ClosePanel();
-        extendGroup.transform.GetChild(0).GetChild(3).GetComponent<Text>().text =
+        extendGroup.transform.GetChild(0).GetChild(0).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].item.name;
-        extendGroup.transform.GetChild(0).GetChild(4).GetComponent<Text>().text =
-            AtomManager.ExhibitionInventories[number].item.price.ToString("N1");
-        extendGroup.transform.GetChild(0).GetChild(5).GetComponent<Text>().text =
+        extendGroup.transform.GetChild(0).GetChild(1).GetComponent<Text>().text =
+            AtomManager.ExhibitionInventories[number].trade.price.ToString("N1");
+        extendGroup.transform.GetChild(0).GetChild(2).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].expire.ToString("MM/dd/yyyy");
         AtomManager.OpenPanel("Extend Group");
     }
@@ -102,6 +120,6 @@ public class InventoryGroup : MonoBehaviour
     public static void ExtendExpire()
     {
         int item = AtomManager.ExhibitionInventories[AtomManager.ExhibitionInventoryNumber].item.id;
-        AtomManager.StartExtendExhibition(item);
+        AtomManager.StartPutTradeExtend(item);
     }
 }

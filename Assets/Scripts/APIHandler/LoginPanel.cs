@@ -6,36 +6,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginPanel : MonoBehaviour
-{
-    public static GameObject LoginGroup;
-    public static GameObject RegisterGroup;
-    public GameObject usernameLoginInput;
-    public GameObject passwordLoginInput;
-
-    public GameObject emailRegisterInput;
-    public GameObject usernameRegisterInput;
-    public GameObject passwordRegisterInput;
-    public GameObject nicknameRegisterInput;
-    public GameObject maleRegisterToggle;
-    public GameObject femaleRegisterToggle;
-    
-    public void Login()
+{ 
+    public void LoginButtonClick()
     {
         AtomManager.OpenPanel("Login Group");
-        string username = usernameLoginInput.GetComponent<TextMeshProUGUI>().text;
-        string password = passwordLoginInput.GetComponent<TextMeshProUGUI>().text;
+        string username = GameObject.Find("Login Group").transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+        string password = GameObject.Find("Login Group").transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
         AtomManager.StartUserLogin(username, password);
     }
 
-    public void Register()
+    public void RegisterButtonClick()
     {
         AtomManager.OpenPanel("Register Group");
-        string email = emailRegisterInput.GetComponent<TextMeshProUGUI>().text;
-        string username = usernameRegisterInput.GetComponent<TextMeshProUGUI>().text;
-        string password = passwordRegisterInput.GetComponent<TextMeshProUGUI>().text;
-        string nickname = nicknameRegisterInput.GetComponent<TextMeshProUGUI>().text;
-        bool flag = maleRegisterToggle.GetComponent<Toggle>().isOn;
-        AtomManager.StartUserRegister(email, username, password, nickname, flag);
+        string email = GameObject.Find("Register Form").transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+        string username = GameObject.Find("Register Form").transform.GetChild(1).GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+        string password = GameObject.Find("Register Form").transform.GetChild(2).GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+        string nickname = GameObject.Find("Register Form").transform.GetChild(3).GetChild(1).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+        AtomManager.StartUserRegister(email, username, password, nickname);
     }
 
     public static void OpenLoginGroup()
@@ -48,21 +35,5 @@ public class LoginPanel : MonoBehaviour
     {
         AtomManager.ClosePanel();
         AtomManager.OpenPanel("Register Group");
-    }
-
-    public void checkMale()
-    {
-        Toggle male = maleRegisterToggle.GetComponent<Toggle>();
-        Toggle female = femaleRegisterToggle.GetComponent<Toggle>();
-        male.isOn = true;
-        female.isOn = false;
-    }
-
-    public void checkFemale()
-    {
-        Toggle male = maleRegisterToggle.GetComponent<Toggle>();
-        Toggle female = femaleRegisterToggle.GetComponent<Toggle>();
-        male.isOn = false;
-        female.isOn = true;
     }
 }

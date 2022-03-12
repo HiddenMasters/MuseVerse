@@ -11,8 +11,7 @@ public class Auth : MonoBehaviour
     private const string BaseURL = "http://0.0.0.0:8080/api";
     private static string _token;
 
-    public static IEnumerator PostRegister(string username, string password, string nickname, bool gender,
-        string email = null)
+    public static IEnumerator PostRegister(string username, string password, string nickname, string email = null)
     {
         const string path = "/auth/register";
 
