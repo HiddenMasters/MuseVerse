@@ -88,12 +88,11 @@ public class Trade : MonoBehaviour
 
     public static IEnumerator PutTradeBuy(int tradeId)
     {
-        string path = string.Format("/trade/{0}", tradeId);
+        string path = string.Format("/trade/{0}/buy", tradeId);
         
         UnityWebRequest request = UnityWebRequest.Put(BaseURL + path, String.Empty);
         request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
-        request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -103,7 +102,8 @@ public class Trade : MonoBehaviour
         }
         else
         {
-            // 정상 구매 Alert
+            AtomManager.Refresh();
+            AtomManager.OpenAlertPanel("정상적으로 구매하였습니다!");
         }
     }
 
@@ -114,7 +114,6 @@ public class Trade : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Put(BaseURL + path, String.Empty);
         request.SetRequestHeader("Authorization", AtomManager.Token);
         request.SetRequestHeader("Content-Type", "application/json");
-        request.timeout = 1;
 
         yield return request.SendWebRequest();
 
@@ -125,6 +124,33 @@ public class Trade : MonoBehaviour
         else
         {
             // 정상적으로 Trade가 연장 Alert
+        }
+    }
+    
+    public static IEnumerator PutTradePrice(int tradeId, float price)
+    {
+        string path = string.Format("/trade/{0}/price", tradeId);
+
+        TradeChangePriceSerializer serializer = new TradeChangePriceSerializer(price);
+        string json = JsonUtility.ToJson(serializer);
+        byte[] bytes = Encoding.UTF8.GetBytes(json);
+        
+        UnityWebRequest request = UnityWebRequest.Put(BaseURL + path, json);
+        request.uploadHandler = new UploadHandlerRaw(bytes);
+        request.SetRequestHeader("Authorization", AtomManager.Token);
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.timeout = 1;
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            AtomManager.Refresh();
+            AtomManager.OpenAlertPanel("가격이 정상적으로 수정되었습니다!");
         }
     }
 

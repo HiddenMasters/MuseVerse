@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace API.Models
 {
@@ -211,6 +212,7 @@ namespace API.Models
     [Serializable]
     public class TradeSerializer
     {
+        public int id;
         public int seller;
         public ItemDetailSerializer item;
         public int buyer;
@@ -223,6 +225,17 @@ namespace API.Models
     public class TradesSerializer
     {
         public TradeSerializer[] histories;
+    }
+
+    [Serializable]
+    public class TradeChangePriceSerializer
+    {
+        public float price;
+
+        public TradeChangePriceSerializer(float price)
+        {
+            this.price = price;
+        }
     }
 
     [Serializable]

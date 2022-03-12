@@ -108,6 +108,10 @@ public class InventoryGroup : MonoBehaviour
         
         GameObject extendGroup = GameObject.Find("Extend Group");
         AtomManager.ClosePanel();
+        AtomManager.ExtendExhibition = AtomManager.ExhibitionInventories[number].id;
+        AtomManager.ChangePriceTrade = AtomManager.ExhibitionInventories[number].trade.id;
+        Debug.Log(AtomManager.ExhibitionInventories[number].id);
+        Debug.Log(AtomManager.ExhibitionInventories[number].trade.id);
         extendGroup.transform.GetChild(0).GetChild(0).GetComponent<Text>().text =
             AtomManager.ExhibitionInventories[number].item.name;
         extendGroup.transform.GetChild(0).GetChild(1).GetComponent<Text>().text =
@@ -117,9 +121,17 @@ public class InventoryGroup : MonoBehaviour
         AtomManager.OpenPanel("Extend Group");
     }
 
-    public static void ExtendExpire()
+    public static void ExtendConfirm()
     {
-        int item = AtomManager.ExhibitionInventories[AtomManager.ExhibitionInventoryNumber].item.id;
-        AtomManager.StartPutTradeExtend(item);
+        AtomManager.ClosePanel();
+        AtomManager.ConfirmType = "EXTEND";
+        AtomManager.OpenConfirmPanel("정말 연장 하시겠습니까?");
+    }
+
+    public static void ChangePrice()
+    {
+        AtomManager.ClosePanel();
+        AtomManager.InputType = "PRICE";
+        AtomManager.OpenInputPanel("변경하실 가격을 입력해주세요.");
     }
 }
