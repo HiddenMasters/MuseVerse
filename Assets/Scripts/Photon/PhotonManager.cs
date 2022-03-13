@@ -11,8 +11,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
      // 버전 입력
     private readonly string version = "1.0f";
     
-    // 사용자 아이디 입력
-    private string userID = "Junsu";
+    private string userID = "youknow";
 
     void Awake()
     {
@@ -48,7 +47,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
     
     public override void OnJoinRandomFailed(short returnCode, string message) {
-        // PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
+        PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
     }
 
     // 룸 생성이 완료된 후 호출되는 콜백 함수
@@ -82,6 +81,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ro.IsVisible = true;    // 로비에서 룸 목록에 노출 시킬지 여부
 
         // 룸 생성
-        PhotonNetwork.CreateRoom("Rivate Room" + AtomManager.Profile.id, ro);
+        PhotonNetwork.CreateRoom("Rivate Room", ro);
     }
 }

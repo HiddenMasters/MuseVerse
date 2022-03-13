@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginPanel : MonoBehaviour
-{ 
+{
     public void LoginButtonClick()
     {
         AtomManager.OpenPanel("Login Group");
