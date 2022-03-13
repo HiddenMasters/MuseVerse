@@ -47,7 +47,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
     
     public override void OnJoinRandomFailed(short returnCode, string message) {
-        // PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
+        PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
     }
 
     // 룸 생성이 완료된 후 호출되는 콜백 함수
