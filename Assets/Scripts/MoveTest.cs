@@ -653,6 +653,11 @@ public class MoveTest : MonoBehaviourPun
                 Com.transform.position = new Vector3(destination.x, destination.y, destination.z - 3);
             }
         }
+
+        if (other.CompareTag("Zone"))
+        {
+            
+        }
     }
 
     #endregion
