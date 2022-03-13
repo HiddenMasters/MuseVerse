@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
@@ -36,19 +39,29 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Connected to Master!");
         Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
-        PhotonNetwork.JoinLobby();      // 로비 입장
+        AtomManager.SceneType = "MAIN";
+        PhotonNetwork.JoinLobby();
     }
     
     // 로비에 접속 후 호출되는 콜백 함수
     public override void OnJoinedLobby()
     {
         Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
-        // PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
-        PhotonNetwork.JoinRandomRoom();
+        if (AtomManager.SceneType == "MAIN")
+        {
+            PhotonNetwork.JoinRoom("MainRoom");
+        }
+        else
+        {
+            CreateMyRoom();
+        }
     }
     
-    public override void OnJoinRandomFailed(short returnCode, string message) {
-        // PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 });
+    
+    
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        PhotonNetwork.CreateRoom("MainRoom", new RoomOptions { MaxPlayers = 20 }, null);
     }
 
     // 룸 생성이 완료된 후 호출되는 콜백 함수
@@ -57,31 +70,51 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("Create Room");
         Debug.Log($"Room Name = {PhotonNetwork.CurrentRoom.Name}");
     }
-    
+
+    public override void OnLeftRoom()
+    {
+        Debug.Log("LEFTED");
+        PhotonNetwork.JoinLobby();
+    }
+
     // 룸에 입장한 후 호출되는 콜백 함수
     public override void OnJoinedRoom()
     {
         Debug.Log($"PhotonNetwork.InRoom = {PhotonNetwork.InRoom}");
         Debug.Log($"Player Count = {PhotonNetwork.CurrentRoom.PlayerCount}");
 
-        // 룸애 접속한 사용자 정보 확인x
-        foreach (var player in PhotonNetwork.CurrentRoom.Players)
+        if (AtomManager.SceneType == "MAIN")
         {
-            Debug.Log($"{player.Value.NickName},{player.Value.ActorNumber}");
+            int i = 0;
+            string[] names = new string[10];
+        
+            foreach (var player in PhotonNetwork.CurrentRoom.Players)
+            {
+                Debug.Log($"{player.Value.NickName},{player.Value.ActorNumber}");
+
+                names[i] = player.Value.NickName;
+                i++;
+            }
+
+            AtomManager.RoomNames = names;
+        
+            PhotonNetwork.LoadLevel("MainScene");
         }
-        PhotonNetwork.LoadLevel("MainScene");
+        else
+        {
+            AsyncOperation _async;
+            _async = SceneManager.LoadSceneAsync("PrivateScene");
+            PhotonNetwork.LoadLevel("PrivateScene");
+        }
     }
 
-
-    public void CreateRoom()
+    public void CreateMyRoom()
     {
         // 룸의 속성 정의
         RoomOptions ro = new RoomOptions();
-        ro.MaxPlayers = 20;     //최대 접속자 수 : 20명
+        ro.MaxPlayers = 5;     //최대 접속자 수 : 20명
         ro.IsOpen = true;       // 룸의 오픈 여부
         ro.IsVisible = true;    // 로비에서 룸 목록에 노출 시킬지 여부
-
-        // 룸 생성
-        PhotonNetwork.CreateRoom("Rivate Room" + AtomManager.Profile.id, ro);
+        PhotonNetwork.JoinOrCreateRoom($"{userID} Private Room", ro, null);
     }
 }

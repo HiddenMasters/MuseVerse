@@ -42,11 +42,10 @@ public class ExhibitionItem : MonoBehaviour
     {
         AtomManager.clickedHall = hall;
         AtomManager.clickedNum = num;
-        AtomManager.SelectedExhibition = _exhibition.trade.id;
-        
         
         if (_exhibition != null)
         {
+            AtomManager.SelectedExhibition = _exhibition.trade.id;
             AtomManager.OpenPanel("Trade Group");
             TradeGroup.SetImage(_sprite);
             TradeGroup.SetDetail(_exhibition);
