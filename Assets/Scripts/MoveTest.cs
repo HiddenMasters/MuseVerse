@@ -200,6 +200,7 @@ public class MoveTest : MonoBehaviourPun
     {
         InitComponents();
         InitSettings();
+        AtomManager.DefaultSetting();
         _brush = GameObject.Find("Brush");
     }
 
@@ -640,9 +641,6 @@ public class MoveTest : MonoBehaviourPun
             else if (other.gameObject.name == "PrivatePortal")
             {
                 AtomManager.OpenPanel("Room List Group");
-                
-                AsyncOperation _async;
-                _async = SceneManager.LoadSceneAsync("PrivateScene");
             }
             else if (other.gameObject.name == "AtelierPortal")
             {

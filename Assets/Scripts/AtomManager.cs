@@ -21,16 +21,36 @@ public sealed class AtomManager : MonoBehaviour
             Destroy(gameObject);    
         }
         
-        DefaultSetting();
+        // DefaultSetting();
         DontDestroyOnLoad(gameObject);
     }
 
     public static void DefaultSetting()
     {
-        InventoryGroup.LoadInventories();
-        StartGetUserProfile();
-        StartGetBuyHistories();
-        StartGetSellHistories();
+        if (AtomManager.SceneType != "PRIVATE")
+        {
+            InventoryGroup.LoadInventories();
+            StartGetUserProfile();
+            StartGetBuyHistories();
+            StartGetSellHistories();
+            SetRoomList();   
+        }
+    }
+
+    public static void SetRoomList()
+    {
+        GameObject content = GameObject.Find("PrivateRoomContents");
+
+        int i = 0;
+        foreach (var player in RoomNames)
+        {
+            if (player != null)
+            {
+                content.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = player;
+                content.transform.GetChild(i).gameObject.SetActive(true);
+                i++;
+            }
+        }
     }
 
     public static void Refresh()
@@ -71,8 +91,10 @@ public sealed class AtomManager : MonoBehaviour
     public static int ExtendExhibition { get; set; }
     public static int ChangePriceTrade { get; set; }
     public static int SelectedExhibition { get; set; }
-    
     public static int ExhibitionInventoryNumber { get; set; }
+    public static string[] RoomNames { get; set; }
+    public static int PrivateNumber { get; set; }
+    public static string SceneType { get; set; }
     
     // public static ExhibitionSerializer Exhibition { get; set; }
     public static void ClosePanel()
